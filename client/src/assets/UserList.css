@@ -1,0 +1,105 @@
+
+/* Swiper Slide Base Styles */
+.mySwiper .swiper-slide { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    transform-origin: center; /* Rotate around the center */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* Smooth animations */
+    perspective: 1000px; /* Add depth */
+}
+
+/* Active Slide (Center) */
+.mySwiper .swiper-slide-active {
+    transform: scale(1.005) translateZ(120px); /* Scale up and move closer */
+    z-index: 3; /* Bring to front */
+}
+
+/* Previous Slide - Tilt Slightly Right */
+.mySwiper .swiper-slide-prev {
+    transform: rotateY(-15deg) scale(0.9) translateZ(-240px); /* Tilt and scale down */
+    opacity: 0.9; /* Dim opacity for depth effect */
+    z-index: 2;
+}
+
+/* Next Slide - Tilt Slightly Left */
+.mySwiper .swiper-slide-next {
+    transform: rotateY(-15deg) scale(0.9) translateZ(240px); /* Tilt and scale down */
+    opacity: 0.9; /* Dim opacity for depth effect */
+    z-index: 2;
+}
+
+@media (max-width: 1024px) {
+    .mySwiper .swiper-slide-prev {
+        transform: rotateY(-15deg) scale(0.9) translateZ(-150px); /* Tilt and scale down */ 
+    }
+
+    .mySwiper .swiper-slide-next {
+        transform: rotateY(-15deg) scale(0.9) translateZ(150px); /* Tilt and scale down */
+    }
+}
+
+@media (max-width: 768px) {
+    .mySwiper .swiper-slide-prev {
+        transform: rotateY(-15deg) scale(0.9) translateZ(-100px); /* Tilt and scale down */
+    }
+
+    .mySwiper .swiper-slide-next {
+        transform: rotateY(-15deg) scale(0.9) translateZ(100px); /* Tilt and scale down */
+    }
+}
+@media (max-width: 600px) {
+    .mySwiper .swiper-slide-prev {
+        transform: rotateY(-15deg) scale(0.9) translateZ(-300px); /* Tilt and scale down */
+    }
+
+    .mySwiper .swiper-slide-next {
+        transform: rotateY(-15deg) scale(0.9) translateZ(300px); /* Tilt and scale down */
+    }
+}
+@media (max-width: 420px) {
+    .mySwiper .swiper-slide-prev {
+        transform: rotateY(-15deg) scale(0.9) translateZ(100px); /* Tilt and scale down */
+    }
+
+    .mySwiper .swiper-slide-next {
+        transform: rotateY(-15deg) scale(0.9) translateZ(-100px); /* Tilt and scale down */
+    }
+}
+
+
+/* For 2 Slides Behind (Left) */
+.mySwiper .swiper-slide-prev-prev {
+    transform: rotateY(30deg) scale(0.85) translateZ(-500px); /* Further tilt */
+    opacity: 0.6;
+    z-index: 1;
+}
+
+/* For 2 Slides Ahead (Right) */
+.mySwiper .swiper-slide-next-next {
+    transform: rotateY(-30deg) scale(0.85) translateZ(-500px); /* Further tilt */
+    opacity: 0.6;
+    z-index: 1;
+}
+
+/* Profile Card Styles */
+.profile-card {
+    background: #ebf8ff; /* Light background */
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.3s ease;
+    /* padding: 16px; Padding */
+}
+
+/* Hover Effect */
+.profile-card:hover {
+    transform: scale(1.05); /* Pop-out effect */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+
+/* Perspective Effect */
+.mySwiper {
+    perspective: 1200px; /* Creates depth for 3D effect */
+}

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import { useParams } from 'react-router-dom'; // To get the profile user ID from the URL
 
-function Follow() {
+function Follow({ onFollowChange }) {
   const [isFollowing, setIsFollowing] = useState(false); // Default: not following
   const { userId } = useParams(); // Assuming profileUserId is passed via the URL
   const token = localStorage.getItem('token'); // Retrieve token from local storage
@@ -56,6 +56,11 @@ function Follow() {
 
       console.log('Toggle response:', response.data.message);
       setIsFollowing(!isFollowing); // Toggle follow status
+      
+      // Call the callback to update parent component
+      if (onFollowChange) {
+        onFollowChange();
+      }
     } catch (error) {
       console.error('Error toggling follow status:', error);
     }

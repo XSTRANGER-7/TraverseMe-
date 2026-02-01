@@ -20,26 +20,29 @@ dotenv.config();  // Load environment variables from .env
 
 const app = express(); 
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:3000',
+        credentials: true
+    }
+});
+
+// Add security headers middleware
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
+    next();
+});
   
-  app.use(cors({
-      origin: 'http://localhost:3000', // Allow requests from your frontend URL
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      allowedHeaders: ['Content-Type', 'Authorization'], // Allowed methods
-      credentials: true, // Allow cookies if needed
-    })); // Ensure cross-origin requests are handled properly
-    
-    
-    // app.use((req, res, next) => {
-        //     res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Your frontend URL
-        //     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        //     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        //     res.header('Access-Control-Allow-Credentials', 'true'); // This allows credentials (cookies, etc.)
-        //     next();
-        // });
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow requests from your frontend URL
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed methods
+    credentials: true, // Allow cookies if needed
+})); // Ensure cross-origin requests are handled properly
         
         
-        app.use(express.json()); 
+app.use(express.json()); 
 
 const JWT_SECRET = process.env.JWT_SECRET || 'K2qNFsd9mBa/6HqPjL+rtYnPsc6RNuqOxepQcaRIgCI=';
 
@@ -107,18 +110,18 @@ const authenticateToken = (req, res, next) => {
 
 app.post('/register', async (req, res) => {
     try {
-        const { name, email, password, age, gender, aadhaarNo } = req.body;
+        const { name, email, password, age, gender} = req.body;
 
         // Ensure all required fields are present
-        // if (!name || !email || !password) {
-        //     return res.status(400).json({ message: 'All fields are required.' });
-        // }
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Name, email, and password are required.' });
+        }
 
-        // // Check if the user already exists
-        // const existingUser = await User.findOne({ email });
-        // if (existingUser) {
-        //     return res.status(400).json({ message: 'User already exists.' });
-        // }
+        // Check if the user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists.' });
+        }
 
         // Hash the password before saving the user
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -128,18 +131,17 @@ app.post('/register', async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            gender,
-            age,
-            aadhaarNo,
+            gender: gender || 'other',
+            age: age || 18,
+            verified: true, // Auto-verify users for now
         });
 
         // Save the new user to the database
         await newUser.save();
 
         // Send a success response
-        // res.status(201).json({ message: 'User registered successfully. Please log in.' });
-        res.status(203).json({
-            message: 'Registration successful! Our team will verify your profile soon. Please try to log in after some time.',
+        res.status(201).json({
+            message: 'Registration successful! You can now log in.',
         });
     } catch (error) {
         console.error('Error during registration:', error.message);
@@ -200,7 +202,7 @@ app.post('/auth/google', async (req, res) => {
 
         // If user doesn't exist, create a new one
         if (!user) {
-            user = new User({ name, email, photo });
+            user = new User({ name, email, photo, verified: true });
             await user.save();
         }
 

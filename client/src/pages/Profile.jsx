@@ -18,14 +18,15 @@ function ProfilePage() {
     const [editing, setEditing] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [followersDetails, setFollowersDetails] = useState([]);
-    // const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
 
         if (!token) {
-            navigate('/auth');
+            setIsAuthenticated(false);
+            navigate('/auth', { replace: true });
             return;
         }
 
@@ -37,10 +38,14 @@ function ProfilePage() {
                     },
                 });
                 setUser(response.data);
+                setIsAuthenticated(true);
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setError('Failed to fetch user data. Please try again.');
-                navigate('/auth');
+                setIsAuthenticated(false);
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                navigate('/auth', { replace: true });
             }
         };
 
@@ -51,6 +56,13 @@ function ProfilePage() {
 
         initializeData();
     }, [navigate]);
+
+    // Monitor authentication state
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate('/auth', { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
 
     // const fetchFollowersDetails = async () => {
     //     try {
@@ -102,8 +114,11 @@ function ProfilePage() {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/auth';
         setUser(null);
-        navigate('/auth');
+        setIsAuthenticated(false);
+        // Use window.location for a full page redirect
     };
 
     const handleEditProfile = () => {

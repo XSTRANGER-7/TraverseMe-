@@ -28,73 +28,78 @@ function ProfilePage() {
       return;
     }
 
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:7000/profile/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // console.log('User data:', response.data);
-        setUser(response.data.user); // Assuming the user data is returned under 'user'
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setError("Failed to fetch user data. Please try again.");
-        navigate("/auth"); // Redirect to auth if error occurs
-      }
-    };
-
-    const fetchUserPlans = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:7000/userplans?createdBy=${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // console.log("User plans:", response.data.plans);
-        setAllPlans(response.data.plans); // Assuming plans data is under 'plans'
-
-        const requestStatusResponse = await axios.get(
-          "http://localhost:7000/requeststatus2",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // console.log('Request Status Response:', requestStatusResponse.data);
-
-        // Ensure the response is valid and map statuses to plan IDs
-        if (
-          requestStatusResponse.data &&
-          typeof requestStatusResponse.data === "object"
-        ) {
-          // console.log("Request Status Response:", requestStatusResponse.data);
-          setRequestStatus(requestStatusResponse.data);
-        } else {
-          console.error(
-            "Invalid request status response format:",
-            requestStatusResponse.data
-          );
-          setRequestStatus({});
-        }
-      } catch (error) {
-        console.error("Error fetching user plans:", error);
-        setError("Failed to fetch user plans. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserData();
     fetchUserPlans();
   }, [userId, token, navigate]);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:7000/profile/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log('User data:', response.data);
+      setUser(response.data.user); // Assuming the user data is returned under 'user'
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setError("Failed to fetch user data. Please try again.");
+      navigate("/auth"); // Redirect to auth if error occurs
+    }
+  };
+
+  const fetchUserPlans = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:7000/userplans?createdBy=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log("User plans:", response.data.plans);
+      setAllPlans(response.data.plans); // Assuming plans data is under 'plans'
+
+      const requestStatusResponse = await axios.get(
+        "http://localhost:7000/requeststatus2",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log('Request Status Response:', requestStatusResponse.data);
+
+      // Ensure the response is valid and map statuses to plan IDs
+      if (
+        requestStatusResponse.data &&
+        typeof requestStatusResponse.data === "object"
+      ) {
+        // console.log("Request Status Response:", requestStatusResponse.data);
+        setRequestStatus(requestStatusResponse.data);
+      } else {
+        console.error(
+          "Invalid request status response format:",
+          requestStatusResponse.data
+        );
+        setRequestStatus({});
+      }
+    } catch (error) {
+      console.error("Error fetching user plans:", error);
+      setError("Failed to fetch user plans. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFollowChange = () => {
+    // Refetch user data to update followers count
+    fetchUserData();
+  };
 
   const categorizePlans = () => {
     const currentDate = new Date();
@@ -315,7 +320,7 @@ function ProfilePage() {
               </div>
               <div className="w-full flex justify-around gap-4 p-4"> 
                 <div className="text-center w-1/2">
-                <Follow/> 
+                <Follow onFollowChange={handleFollowChange} /> 
                 </div>
                 <div className="text-center bg-green-500 hover:bg-green-600 text-white px-2 py-3 sm:py-4 md:px-4 md:py-4 rounded-full w-1/2 cursor-pointer" onClick={movetomsg}>
                 <button className="text-sm md:text-md font-semibold" >

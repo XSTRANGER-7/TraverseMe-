@@ -22,7 +22,7 @@ function Home() {
         const token = localStorage.getItem('token');
 
         if (!token) {
-            navigate('/auth');
+            window.location.href = '/auth';
             return;
         }
 
@@ -40,13 +40,19 @@ function Home() {
                 console.error('Error fetching user data:', error);
                 setError('Failed to fetch user data. Please try again.');
                 setLoading(false);
-                navigate('/auth');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/auth';
             }
         };
 
         fetchUserData();
     }, [navigate]);
 
+    // Don't render anything if there's no token
+    if (!localStorage.getItem('token')) {
+        return null;
+    }
 
      
     return (

@@ -287,7 +287,7 @@ function ProfilePage() {
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/40 to-purple-700/40 backdrop-blur-sm"></div>
             <button
               onClick={() => navigate("/")}
-              className="absolute top-6 left-6 text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 p-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 group"
+              className="absolute top-6 left-6 text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 p-3 rounded-full shadow-lg transition-all duration-300 group"
             >
               <svg 
                 className="w-6 h-6 transform group-hover:-translate-x-1 transition-transform duration-300" 

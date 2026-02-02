@@ -257,125 +257,153 @@ function ProfilePage() {
 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-lightDark via-gray-900 to-lightDark">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
+        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-4000"></div>
+      </div>
+
       {loading ? (
-        <p>Loading user data...</p>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="relative">
+            <div className="w-20 h-20 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-20 h-20 border-4 border-pink-500 border-t-transparent rounded-full animate-spin animation-delay-1000"></div>
+          </div>
+        </div>
       ) : error ? (
-        <p className="text-red-500 text-center">{error}</p>
+        <p className="text-red-500 text-center text-lg font-semibold">{error}</p>
       ) : user ? (
-        <div className="flex flex-col items-center">
-          {/* {console.log("User:", user)} */}
-          <img
-            src={header}
-            alt=""
-            className="absolute w-full h-48 bg-cover bg-center"
-          />
-          <div className="relative w-full bg-gradient-to-r from-indigo-500 to-purple-700 h-48 bg-cover bg-center text-right">
+        <div className="flex flex-col items-center relative z-10">
+          {/* Header with gradient overlay */}
+          <div className="relative w-full h-64 overflow-hidden">
+            <img
+              src={header}
+              alt=""
+              className="absolute w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 via-pink-900/30 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/40 to-purple-700/40 backdrop-blur-sm"></div>
             <button
               onClick={() => navigate("/")}
-              className="text-white bg-red-600 px-6 py-3 rounded-full my-2 mx-6"
+              className="absolute top-6 right-6 text-white bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               Go Back
             </button>
           </div>
 
-          <div
-            className={
-              "absolute top-20 w-11/12 md:w-9/12 bg-black shadow-lg rounded-lg mt-16 p-6 flex flex-col md:flex-row justify-between items-center md:items-start"
-            }
-          >
-            <div className="relative md:absolute md:bottom-[130px] ">
+          {/* Profile Card with glass morphism */}
+          <div className="absolute top-32 w-11/12 md:w-9/12 bg-black/40 backdrop-blur-xl border border-purple-500/30 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-purple-500/50 transition-all duration-500">
+            {/* Animated gradient border effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-indigo-500/20 rounded-3xl blur-xl -z-10"></div>
+            
+            <div className="relative md:absolute md:bottom-[130px] group">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
               <img
                 src={user.photo || "/default-profile.jpg"}
                 alt={`${user.name}'s profile`}
-                className={`${getBorderColor(user.gender)} w-36 h-36 rounded-full border-4 shadow-lg`}
+                className={`relative ${getBorderColor(user.gender)} w-40 h-40 rounded-full border-4 shadow-2xl transform group-hover:scale-105 transition-all duration-300`}
               />
             </div>
-            <div className="md:w-1/2 flex flex-col mt-16 ml-4">
-              <h1 className="text-3xl font-bold text-gray-100">{user.name}</h1>
-              <p className="text-gray-200">
-                Location: {user.location || "Unknown"}
+
+            <div className="md:w-1/2 flex flex-col mt-20 md:mt-16 ml-4 space-y-2">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent animate-gradient">{user.name}</h1>
+              <p className="text-gray-300 flex items-center gap-2">
+                <svg className="w-5 h-5 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                </svg>
+                {user.location || "Unknown"}
               </p>
             </div>
-            <div className="w-11/12 md:w-1/2 flex flex-col items-center">
-              <div className="flex justify-around w-full mb-4">
-                <div className="text-center">
-                  <p className="text-xl font-semibold text-gray-100">
+
+            <div className="w-11/12 md:w-1/2 flex flex-col items-center mt-8 md:mt-0">
+              <div className="flex justify-around w-full mb-6 gap-4">
+                <div className="text-center bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex-1">
+                  <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                     {allPlans.length}
                   </p>
-                  <p className="text-gray-200">Plans</p>
+                  <p className="text-gray-300 text-sm mt-1">Plans</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-xl font-semibold text-gray-100">
+                <div className="text-center bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex-1">
+                  <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                     {user.followers.length || 0}
                   </p>
-                  <p className="text-gray-200">Followers</p>
+                  <p className="text-gray-300 text-sm mt-1">Followers</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-xl font-semibold text-gray-100">
-                    {user.badge || "Leveeeel 1"}
+                <div className="text-center bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex-1">
+                  <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    {user.badge || "Level 1"}
                   </p>
-                  <p className="text-gray-200">Badge</p>
+                  <p className="text-gray-300 text-sm mt-1">Badge</p>
                 </div>
               </div>
-              <div className="w-full flex justify-around gap-4 p-4"> 
+              
+              <div className="w-full flex justify-around gap-4 px-4"> 
                 <div className="text-center w-1/2">
-                <Follow onFollowChange={handleFollowChange} /> 
+                  <Follow onFollowChange={handleFollowChange} /> 
                 </div>
-                <div className="text-center bg-green-500 hover:bg-green-600 text-white px-2 py-3 sm:py-4 md:px-4 md:py-4 rounded-full w-1/2 cursor-pointer" onClick={movetomsg}>
-                <button className="text-sm md:text-md font-semibold" >
+                <button 
+                  onClick={movetomsg}
+                  className="w-1/2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                >
                   Message
-                </button> 
-                </div>
+                </button>
               </div>
             </div>
           </div>
 
-          {/* User Plans */}
-          <div className="w-11/12 md:w-9/12 mt-96 md:mt-36 bg-black shadow-lg rounded-lg p-6 pt-10">
-            <h2 className="text-2xl font-bold text-gray-100 mb-4">Plans</h2>
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+          {/* User Plans Section */}
+          <div className="w-11/12 md:w-9/12 mt-96 md:mt-40 bg-black/40 backdrop-blur-xl border border-purple-500/30 shadow-2xl rounded-3xl p-8 hover:border-purple-500/50 transition-all duration-500">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">Plans</h2>
+            
+            <div className="grid grid-cols-1 gap-8">
               <div>
-                <h3 className="text-xl font-semibold text-gray-200 mb-2">
+                <h3 className="text-2xl font-semibold text-purple-300 mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
                   Upcoming Plans
                 </h3>
-                <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-row gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {paginatedUpcomingPlans.length > 0 ? (
                     paginatedUpcomingPlans.map((plan, index) => (
                       <div
                         key={index}
-                        className="bg-lightDark2 shadow-lg rounded-lg overflow-hidden mb-4 flex flex-col  cursor-pointer  border-gray-600 border-1 hover:border-gray-400"
+                        className="group bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-sm border border-purple-500/30 shadow-xl rounded-2xl overflow-hidden hover:border-purple-500/60 hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                       >
-                        <img
-                          src={plan.photo || "/default-plan.jpg"}
-                          alt={plan.title}
-                          className="w-full h-32 object-cover"
-                        />
-                        <div className="p-4">
-                          <h3 className="text-lg font-bold text-gray-100">
+                        <div className="relative overflow-hidden">
+                          <img
+                            src={plan.photo || "/default-plan.jpg"}
+                            alt={plan.title}
+                            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        <div className="p-5">
+                          <h3 className="text-xl font-bold text-gray-100 mb-2 group-hover:text-purple-300 transition-colors duration-300">
                             {plan.title}
                           </h3>
-                          <p className="text-gray-200">
+                          <p className="text-gray-300 flex items-center gap-2 mb-4">
+                            <svg className="w-4 h-4 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                            </svg>
                             {new Date(plan.date).toLocaleDateString()}
                           </p>
                           <div className="flex justify-center">
-                            {/* {console.log("Request Status plan:", requestStatus)} */}
-                            {requestStatus &&
-                            requestStatus[plan._id] !== undefined ? (
+                            {requestStatus && requestStatus[plan._id] !== undefined ? (
                               requestStatus[plan._id] === "approved" ? (
                                 <button
-                                  className="mt-2 w-2/3 bg-green-500 text-white rounded-full py-3"
+                                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                   onClick={() => handlePlanClick(plan._id)}
                                 > 
                                   View Plan
                                 </button>
                               ) : requestStatus[plan._id] === "pending" ? (
-                                <button className="my-6 w-2/3 bg-gray-600 text-white rounded-full py-3"> 
+                                <button className="w-full bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-full py-3 font-semibold cursor-not-allowed opacity-75"> 
                                   Requested
                                 </button>
                               ) : (
                                 <button
-                                  className="my-6 w-2/3 bg-blue-500 text-white rounded-full py-3"
+                                  className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                   onClick={() => handleJoinRequest(plan._id)}
                                 > 
                                   Join Plan
@@ -383,31 +411,29 @@ function ProfilePage() {
                               )
                             ) : (
                               <button
-                                className="my-6 w-2/3 bg-blue-500 text-white rounded-full py-3"
+                                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                 onClick={() => handleJoinRequest(plan._id)}
                               > 
                                 Join Plan
                               </button>
                             )}
-                  
                           </div>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-200">No upcoming plans.</p>
+                    <p className="text-gray-400 col-span-full text-center py-8">No upcoming plans.</p>
                   )}
                 </div>
 
-                {/* Show pagination only if viewMore is true */}
                 {viewMore && totalPagesUpcoming > 1 && (
-                  <div className="flex justify-center mt-4">
+                  <div className="flex justify-center mt-6 gap-4">
                     <button
                       onClick={handlePreviousUpcomingPage}
-                      className={`px-4 py-2 mx-2 bg-gray-800 text-gray-100 rounded-md ${
+                      className={`px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
                         currentUpcomingPage === 1
                           ? "opacity-50 cursor-not-allowed"
-                          : "hover:bg-gray-400"
+                          : "hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl"
                       }`}
                       disabled={currentUpcomingPage === 1}
                     >
@@ -415,10 +441,10 @@ function ProfilePage() {
                     </button>
                     <button
                       onClick={handleNextUpcomingPage}
-                      className={`px-4 py-2 mx-2 bg-gray-800 text-gray-100 rounded-md ${
+                      className={`px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
                         currentUpcomingPage === totalPagesUpcoming
                           ? "opacity-50 cursor-not-allowed"
-                          : "hover:bg-gray-400"
+                          : "hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl"
                       }`}
                       disabled={currentUpcomingPage === totalPagesUpcoming}
                     >
@@ -428,47 +454,53 @@ function ProfilePage() {
                 )}
               </div>
 
-              <div className="mt-6">
-                <h3 className="text-xl font-semibold text-gray-200 mb-2">
+              <div className="mt-8">
+                <h3 className="text-2xl font-semibold text-pink-300 mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
                   Past Plans
                 </h3>
-                <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-row gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {paginatedPastPlans.length > 0 ? (
                     paginatedPastPlans.map((plan, index) => (
                       <div
                         key={index}
                         onClick={() => pastplansinfo(plan._id)}
-                        className="bg-lightDark2 shadow-lg rounded-lg overflow-hidden mb-4 flex flex-col cursor-pointer border-1 hover:border-gray-400 border-gray-600"
+                        className="group bg-gradient-to-br from-gray-900/50 to-purple-900/30 backdrop-blur-sm border border-gray-700/50 shadow-xl rounded-2xl overflow-hidden cursor-pointer hover:border-pink-500/60 hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                       >
-                        <img
-                          src={plan.photo || "/default-plan.jpg"}
-                          alt={plan.title}
-                          className="w-full h-32 object-cover"
-                        />
-                        <div className="p-4">
-                          <h3 className="text-lg font-bold text-gray-100">
+                        <div className="relative overflow-hidden">
+                          <img
+                            src={plan.photo || "/default-plan.jpg"}
+                            alt={plan.title}
+                            className="w-full h-48 object-cover opacity-75 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        </div>
+                        <div className="p-5">
+                          <h3 className="text-xl font-bold text-gray-100 mb-2 group-hover:text-pink-300 transition-colors duration-300">
                             {plan.title}
                           </h3>
-                          <p className="text-gray-200">
+                          <p className="text-gray-400 flex items-center gap-2">
+                            <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                            </svg>
                             {new Date(plan.date).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-200">No past plans.</p>
+                    <p className="text-gray-400 col-span-full text-center py-8">No past plans.</p>
                   )}
                 </div>
 
-                {/* Show pagination only if viewMore is true */}
                 {viewMore && totalPagesPast > 1 && (
-                  <div className="flex justify-center mt-4">
+                  <div className="flex justify-center mt-6 gap-4">
                     <button
                       onClick={handlePreviousPastPage}
-                      className={`px-4 py-2 mx-2 bg-gray-800 text-gray-100 rounded-md ${
+                      className={`px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
                         currentPastPage === 1
                           ? "opacity-50 cursor-not-allowed"
-                          : "hover:bg-gray-400"
+                          : "hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl"
                       }`}
                       disabled={currentPastPage === 1}
                     >
@@ -476,10 +508,10 @@ function ProfilePage() {
                     </button>
                     <button
                       onClick={handleNextPastPage}
-                      className={`px-4 py-2 mx-2 bg-gray-800 text-gray-100 rounded-md ${
+                      className={`px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
                         currentPastPage === totalPagesPast
                           ? "opacity-50 cursor-not-allowed"
-                          : "hover:bg-gray-400"
+                          : "hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl"
                       }`}
                       disabled={currentPastPage === totalPagesPast}
                     >
@@ -490,12 +522,11 @@ function ProfilePage() {
               </div>
             </div>
 
-            {/* View More Button */}
             {!viewMore && upcomingPlans.length > 3 && (
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-center mt-8">
                 <button
                   onClick={handleViewMore}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
                   View More
                 </button>
@@ -504,7 +535,7 @@ function ProfilePage() {
           </div>
         </div>
       ) : (
-        <p>No user data found</p>
+        <p className="text-gray-400 text-center text-lg">No user data found</p>
       )}
     </div>
   );

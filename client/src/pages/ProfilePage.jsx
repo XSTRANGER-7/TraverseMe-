@@ -287,9 +287,16 @@ function ProfilePage() {
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/40 to-purple-700/40 backdrop-blur-sm"></div>
             <button
               onClick={() => navigate("/")}
-              className="absolute top-6 right-6 text-white bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+              className="absolute top-6 left-6 text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 p-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 group"
             >
-              Go Back
+              <svg 
+                className="w-6 h-6 transform group-hover:-translate-x-1 transition-transform duration-300" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
             </button>
           </div>
 
@@ -354,7 +361,7 @@ function ProfilePage() {
           </div>
 
           {/* User Plans Section */}
-          <div className="w-11/12 md:w-9/12 mt-96 md:mt-40 bg-black/40 backdrop-blur-xl border border-purple-500/30 shadow-2xl rounded-3xl p-8 hover:border-purple-500/50 transition-all duration-500">
+          <div className="w-11/12 md:w-9/12 mt-[420px] md:mt-48 bg-black/40 backdrop-blur-xl border border-purple-500/30 shadow-2xl rounded-3xl p-8 hover:border-purple-500/50 transition-all duration-500">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">Plans</h2>
             
             <div className="grid grid-cols-1 gap-8">

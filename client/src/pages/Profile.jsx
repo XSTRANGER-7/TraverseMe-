@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -216,54 +214,98 @@ function ProfilePage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-lightDark via-gray-900 to-lightDark">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                <div className="absolute top-40 right-10 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
+                <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-4000"></div>
+            </div>
+
             {loading ? (
-                <p>Loading user data...</p>
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="relative">
+                        <div className="w-20 h-20 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                        <div className="absolute inset-0 w-20 h-20 border-4 border-pink-500 border-t-transparent rounded-full animate-spin animation-delay-1000"></div>
+                    </div>
+                </div>
             ) : error ? (
-                <p className="text-red-500 text-center">{error}</p>
+                <p className="text-red-500 text-center text-lg font-semibold">{error}</p>
             ) : user ? ( 
-                <div className="flex flex-col items-center">
-                    {/* Header image */}
-                    <img src={header} alt="" className="absolute w-full h-48 bg-cover bg-center" />
-                    <div className="relative w-full bg-gradient-to-r from-indigo-500 to-purple-700 h-48 bg-cover bg-center text-right">
-                        <button onClick={handleLogout} className='text-white bg-red-600 px-6 py-3 rounded-full my-2 mx-6'>Logout</button>
+                <div className="flex flex-col items-center relative z-10">
+                    {/* Header with gradient overlay */}
+                    <div className="relative w-full h-64 overflow-hidden">
+                        <img src={header} alt="" className="absolute w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 via-pink-900/30 to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/40 to-purple-700/40 backdrop-blur-sm"></div>
+                        <button 
+                            onClick={handleLogout} 
+                            className="absolute top-6 right-6 text-white bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                        >
+                            Logout
+                        </button>
                     </div>
 
-                    {/* Profile Details */}
-                    <div className={"absolute top-20 w-11/12 md:w-9/12 bg-black shadow-lg rounded-lg mt-16 p-6 flex flex-col md:flex-row justify-between items-center md:items-start text-white"}>
-                        <div className="relative md:absolute md:bottom-[100px] ">
+                    {/* Profile Card with glass morphism */}
+                    <div className="absolute top-32 w-11/12 md:w-9/12 bg-black/40 backdrop-blur-xl border border-purple-500/30 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-purple-500/50 transition-all duration-500">
+                        {/* Animated gradient border effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-indigo-500/20 rounded-3xl blur-xl -z-10"></div>
+                        
+                        <div className="relative md:absolute md:bottom-[130px] group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <img
                                 src={user.photo || "/default-profile.jpg"}
                                 alt={`${user.name}'s profile`}
-                                className={`${getBorderColor(user.gender)} w-36 h-36 rounded-full border-4 shadow-lg `}
+                                className={`relative ${getBorderColor(user.gender)} w-40 h-40 rounded-full border-4 shadow-2xl transform group-hover:scale-105 transition-all duration-300`}
                             />
-                            {console.log("User Photo:", user.gender)}
-                        </div> 
-                        <div className="md:w-1/2 flex flex-col mt-14 ml-4">
-                            <h1 className="text-3xl font-bold text-gray-100">{user.name}</h1>
-                            <p className="text-gray-200">Location: {user.location || "Unknown"}</p>
                         </div>
-                        <div className="w-11/12 md:w-1/2 flex flex-col items-center">
-                            <div className="flex justify-around w-full mb-8 md:mb-4">
-                                <div className="text-center">
-                                    <p className="text-xl font-semibold text-gray-100">{allPlans.length}</p>
-                                    <p className="text-gray-200">Plans</p>
+
+                        <div className="md:w-1/2 flex flex-col mt-20 md:mt-16 ml-4 space-y-2">
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent animate-gradient">{user.name}</h1>
+                            <p className="text-gray-300 flex items-center gap-2">
+                                <svg className="w-5 h-5 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                </svg>
+                                {user.location || "Unknown"}
+                            </p>
+                        </div>
+
+                        <div className="w-11/12 md:w-1/2 flex flex-col items-center mt-8 md:mt-0">
+                            <div className="flex justify-around w-full mb-6 gap-4">
+                                <div className="text-center bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex-1">
+                                    <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                        {allPlans.length}
+                                    </p>
+                                    <p className="text-gray-300 text-sm mt-1">Plans</p>
                                 </div>
-                                <div className="text-center" onClick={openModal}>
-                                    <p className="text-xl font-semibold text-gray-100">{user.followers.length || 0}</p>
-                                    <p className="text-gray-200">Followers</p>
+                                <div 
+                                    onClick={openModal}
+                                    className="text-center bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex-1 cursor-pointer"
+                                >
+                                    <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                        {user.followers.length || 0}
+                                    </p>
+                                    <p className="text-gray-300 text-sm mt-1">Followers</p>
                                 </div>
-                                <div className="text-center">
-                                    <p className="text-xl font-semibold text-gray-100">{user.badge || "Level 1"}</p>
-                                    <p className="text-gray-200">Badge</p>
+                                <div className="text-center bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 flex-1">
+                                    <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                        {user.badge || "Level 1"}
+                                    </p>
+                                    <p className="text-gray-300 text-sm mt-1">Badge</p>
                                 </div>
                             </div>
-                            <div className="w-full flex justify-around "> 
-                                    <button onClick={handleEditProfile} className=" text-sm md:text-md font-semibold bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 md:px-4 md:py-4 rounded-full w-5/12">
+                            
+                            <div className="w-full flex justify-around gap-4 px-4"> 
+                                <button 
+                                    onClick={handleEditProfile} 
+                                    className="w-1/2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-4 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
                                     Edit Profile
-                                </button> 
-                                
-                                <button onClick={handlecreateplan} className="text-sm md:text-md font-semibold bg-green-500 hover:bg-green-600 text-white px-2 py-3 sm:py-4 md:px-4 md:py-4 rounded-full w-5/12">
+                                </button>
+                                <button 
+                                    onClick={handlecreateplan} 
+                                    className="w-1/2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
                                     Make a Plan
                                 </button>
                             </div>
@@ -271,69 +313,57 @@ function ProfilePage() {
                     </div>
 
                     {/* Follower Modal */}
-                    {console.log(isModalOpen)}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-dark p-6 rounded-lg w-96 shadow-lg relative">
-                        <h2 className="text-xl font-bold mb-4">Followers</h2>
-                        
-                        {/* List Followers */}
-                        {/* <ul className="max-h-60 overflow-y-auto">
-                            {console.log("g",user.followers)}
-                            {user.followers.length > 0 ? (
-                                user.followers.map((follower, index) => (
-                                    <li key={index} className="p-2 border-b border-gray-200">
-                                        {follower.name || "Unknown"}
-                                    </li>
-                                ))
-                            ) : (
-                                <p className="text-gray-500">No Followers</p>
-                            )}
-                        </ul> */}
+                    {isModalOpen && (
+                        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
+                            <div className="bg-gradient-to-br from-gray-900 to-purple-900 border border-purple-500/30 p-8 rounded-3xl w-11/12 md:w-[500px] shadow-2xl relative transform animate-scaleIn">
+                                <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">Followers</h2>
+                                
+                                <ul className="max-h-96 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-gray-800">
+                                    {user.followers.length > 0 ? (
+                                        user.followers.map((follower, index) => (
+                                            <li 
+                                                key={index} 
+                                                className="p-4 bg-black/30 backdrop-blur-sm border border-purple-500/20 rounded-2xl flex items-center gap-4 hover:border-purple-500/40 hover:bg-black/40 transition-all duration-300 group"
+                                            >
+                                                <div className="relative">
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-sm opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                                                    <img
+                                                        src={follower.photo || "/default-profile.jpg"}
+                                                        alt={`${follower.name}'s profile`}
+                                                        className="relative w-14 h-14 rounded-full border-2 border-purple-400 shadow-lg"
+                                                    />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <p className="text-lg font-semibold text-gray-100">{follower.name || "Unknown"}</p>
+                                                    <p className="text-sm text-gray-400 flex items-center gap-1">
+                                                        <svg className="w-4 h-4 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                                        </svg>
+                                                        {follower.location || "Location: Unknown"}
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <p className="text-gray-400 text-center py-8">No Followers</p>
+                                    )}
+                                </ul>
 
-<ul className="max-h-60 overflow-y-auto">
-    {console.log("Followers List:", user.followers)}
-    {user.followers.length > 0 ? (
-        user.followers.map((follower, index) => (
-            <li key={index} className="p-4 border-b border-gray-200 flex items-center gap-4">
-                {/* Profile Picture */}
-                <img
-                    src={follower.photo || "/default-profile.jpg"} // Default image if no photo
-                    alt={`${follower.name}'s profile`}
-                    className="w-12 h-12 rounded-full border-2 border-gray-300 shadow-sm"
-                />
-                <div>
-                    {/* Follower Name */}
-                    <p className="text-lg font-semibold text-gray-800">{follower.name || "Unknown"}</p>
+                                <button
+                                    onClick={closeModal}
+                                    className="absolute top-4 right-4 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white w-10 h-10 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
-                    {/* Follower Location */}
-                    <p className="text-sm text-gray-500">
-                        {follower.location || "Location: Unknown"}
-                    </p>
-                </div>
-            </li>
-        ))
-    ) : (
-        <p className="text-gray-500">No Followers</p>
-    )}
-</ul>
-
-
-
-                        {/* Close Button */}
-                        <button
-                            onClick={closeModal}
-                            className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full"
-                        >
-                            X
-                        </button>
-                    </div>
-                </div>
-            )}
-                  
-
+                    {/* Edit Profile Modal Overlay */}
                     {editing && (
-                        <div className="fixed inset-0 bg-black opacity-50 z-10" />
+                        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-10 animate-fadeIn" />
                     )}
                     
                     {/* EditProfile Component */}
@@ -343,36 +373,56 @@ function ProfilePage() {
                         </div>
                     )}
 
-                
                     {/* Plans Section */}
-                    <div className="w-11/12 md:w-9/12 mt-96 md:mt-36 bg-black shadow-lg rounded-lg p-6">
-                        <h2 className="text-2xl font-bold text-gray-100 mb-4">Plans</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+                    <div className="w-11/12 md:w-9/12 mt-[420px] md:mt-48 bg-black/40 backdrop-blur-xl border border-purple-500/30 shadow-2xl rounded-3xl p-8 hover:border-purple-500/50 transition-all duration-500">
+                        <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">Plans</h2>
+                        
+                        <div className="grid grid-cols-1 gap-8">
                             <div>
-                                <h3 className="text-xl font-semibold text-gray-200 mb-2">Upcoming Plans</h3>
-                                <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-row gap-6">
+                                <h3 className="text-2xl font-semibold text-purple-300 mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+                                    Upcoming Plans
+                                </h3>
+                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {paginatedUpcomingPlans.length > 0 ? (
                                         paginatedUpcomingPlans.map((plan, index) => (
-                                            <div key={index} onClick={() => navigate(`/showplans/${plan._id}`)} className="bg-lightDark2 shadow-lg rounded-lg overflow-hidden mb-4 flex flex-col cursor-pointer hover:border-gray-400 border-1 border-gray-600">
-                                                <img src={plan.photo || '/default-plan.jpg'} alt={plan.title} className="w-full h-32 object-cover"/>
-                                                <div className="p-4">
-                                                    <h3 className="text-lg font-bold text-gray-100">{plan.title}</h3>
-                                                    <p className="text-gray-200">{new Date(plan.date).toLocaleDateString()}</p>
+                                            <div 
+                                                key={index} 
+                                                onClick={() => navigate(`/showplans/${plan._id}`)} 
+                                                className="group bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-sm border border-purple-500/30 shadow-xl rounded-2xl overflow-hidden cursor-pointer hover:border-purple-500/60 hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                                            >
+                                                <div className="relative overflow-hidden">
+                                                    <img 
+                                                        src={plan.photo || '/default-plan.jpg'} 
+                                                        alt={plan.title} 
+                                                        className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                                                    />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                                </div>
+                                                <div className="p-5">
+                                                    <h3 className="text-xl font-bold text-gray-100 mb-2 group-hover:text-purple-300 transition-colors duration-300">{plan.title}</h3>
+                                                    <p className="text-gray-300 flex items-center gap-2">
+                                                        <svg className="w-4 h-4 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                                                        </svg>
+                                                        {new Date(plan.date).toLocaleDateString()}
+                                                    </p>
                                                 </div>
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="text-gray-100">No upcoming plans.</p>
+                                        <p className="text-gray-400 col-span-full text-center py-8">No upcoming plans.</p>
                                     )}
                                 </div>
 
-                                {/* Show pagination only if viewMore is true */}
                                 {viewMore && totalPagesUpcoming > 1 && (
-                                    <div className="flex justify-center mt-4">
+                                    <div className="flex justify-center mt-6 gap-4">
                                         <button
                                             onClick={handlePreviousUpcomingPage}
-                                            className={`px-4 py-2 mx-2 bg-gray-700 text-gray-200 rounded-md ${
-                                                currentUpcomingPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'
+                                            className={`px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
+                                                currentUpcomingPage === 1
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : "hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl"
                                             }`}
                                             disabled={currentUpcomingPage === 1}
                                         >
@@ -380,8 +430,10 @@ function ProfilePage() {
                                         </button>
                                         <button
                                             onClick={handleNextUpcomingPage}
-                                            className={`px-4 py-2 mx-2 bg-gray-700 text-gray-200 rounded-md ${
-                                                currentUpcomingPage === totalPagesUpcoming ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'
+                                            className={`px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
+                                                currentUpcomingPage === totalPagesUpcoming
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : "hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl"
                                             }`}
                                             disabled={currentUpcomingPage === totalPagesUpcoming}
                                         >
@@ -391,31 +443,51 @@ function ProfilePage() {
                                 )}
                             </div>
 
-                            <div className="mt-6">
-                                <h3 className="text-xl font-semibold text-gray-200 mb-2">Past Plans</h3>
-                                <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-row gap-6">
+                            <div className="mt-8">
+                                <h3 className="text-2xl font-semibold text-pink-300 mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
+                                    Past Plans
+                                </h3>
+                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {paginatedPastPlans.length > 0 ? (
                                         paginatedPastPlans.map((plan, index) => (
-                                            <div key={index} onClick={() => navigate(`/showplans/${plan._id}`)} className="bg-lightDark2 shadow-lg rounded-lg overflow-hidden mb-4 flex flex-col cursor-pointer hover:border-gray-400 border-1 border-gray-600">
-                                                <img src={plan.photo || '/default-plan.jpg'} alt={plan.title} className="w-full h-32 object-cover"/>
-                                                <div className="p-4">
-                                                    <h3 className="text-lg font-bold text-gray-100">{plan.title}</h3>
-                                                    <p className="text-gray-200">{new Date(plan.date).toLocaleDateString()}</p>
+                                            <div 
+                                                key={index} 
+                                                onClick={() => navigate(`/showplans/${plan._id}`)} 
+                                                className="group bg-gradient-to-br from-gray-900/50 to-purple-900/30 backdrop-blur-sm border border-gray-700/50 shadow-xl rounded-2xl overflow-hidden cursor-pointer hover:border-pink-500/60 hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                                            >
+                                                <div className="relative overflow-hidden">
+                                                    <img 
+                                                        src={plan.photo || '/default-plan.jpg'} 
+                                                        alt={plan.title} 
+                                                        className="w-full h-48 object-cover opacity-75 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
+                                                    />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                                                </div>
+                                                <div className="p-5">
+                                                    <h3 className="text-xl font-bold text-gray-100 mb-2 group-hover:text-pink-300 transition-colors duration-300">{plan.title}</h3>
+                                                    <p className="text-gray-400 flex items-center gap-2">
+                                                        <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                                                        </svg>
+                                                        {new Date(plan.date).toLocaleDateString()}
+                                                    </p>
                                                 </div>
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="text-gray-200">No past plans.</p>
+                                        <p className="text-gray-400 col-span-full text-center py-8">No past plans.</p>
                                     )}
                                 </div>
 
-                                {/* Show pagination only if viewMore is true */}
                                 {viewMore && totalPagesPast > 1 && (
-                                    <div className="flex justify-center mt-4">
+                                    <div className="flex justify-center mt-6 gap-4">
                                         <button
                                             onClick={handlePreviousPastPage}
-                                            className={`px-4 py-2 mx-2 bg-gray-700 text-gray-100 rounded-md ${
-                                                currentPastPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'
+                                            className={`px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
+                                                currentPastPage === 1
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : "hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl"
                                             }`}
                                             disabled={currentPastPage === 1}
                                         >
@@ -423,8 +495,10 @@ function ProfilePage() {
                                         </button>
                                         <button
                                             onClick={handleNextPastPage}
-                                            className={`px-4 py-2 mx-2 bg-gray-700 text-gray-800 rounded-md ${
-                                                currentPastPage === totalPagesPast ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'
+                                            className={`px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
+                                                currentPastPage === totalPagesPast
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : "hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl"
                                             }`}
                                             disabled={currentPastPage === totalPagesPast}
                                         >
@@ -435,172 +509,22 @@ function ProfilePage() {
                             </div>
                         </div>
                        
-                        {/* View More Button */}
                         {!viewMore && upcomingPlans.length > 3 && (
-                            <div className="flex justify-center mt-4">
+                            <div className="flex justify-center mt-8">
                                 <button
                                     onClick={handleViewMore}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                    className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                                 >
                                     View More
                                 </button>
                             </div>
                         )}
-                        
                     </div>
-                
                 </div> 
             ) : (
-                <p>No user data available.</p>
+                <p className="text-gray-400 text-center text-lg">No user data available.</p>
             )}
-
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-// <div className="min-h-screen bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white">
-//   {loading ? (
-//     <div className="flex items-center justify-center min-h-screen">
-//       <p className="text-xl font-semibold">Loading user data...</p>
-//     </div>
-//   ) : error ? (
-//     <div className="flex items-center justify-center min-h-screen">
-//       <p className="text-red-500 text-xl text-center">{error}</p>
-//     </div>
-//   ) : user ? (
-//     <div className="relative">
-//       {/* Header Section */}
-//       <header className="relative w-full h-48 bg-gradient-to-r from-indigo-600 to-purple-700">
-//         <button
-//           onClick={handleLogout}
-//           className="absolute top-4 right-6 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full shadow-lg transition duration-200"
-//         >
-//           Logout
-//         </button>
-//         <img
-//           src={header}
-//           alt=""
-//           className="absolute inset-0 w-full h-full object-cover opacity-50"
-//         />
-//       </header>
-
-//       {/* Profile Section */}
-//       <section className="relative flex flex-col items-center mt-[-50px]">
-//         <div className="relative">
-//           <img
-//             src={user.photo || "/default-profile.jpg"}
-//             alt={`${user.name}'s profile`}
-//             className="w-36 h-36 rounded-full border-4 border-white shadow-lg"
-//           />
-//         </div>
-//         <div className="mt-6 text-center">
-//           <h1 className="text-3xl font-bold">{user.name}</h1>
-//           <p className="text-gray-300">Location: {user.location || "Unknown"}</p>
-//         </div>
-//         <div className="flex space-x-8 mt-6">
-//           <div className="text-center">
-//             <p className="text-xl font-bold">{allPlans.length}</p>
-//             <p className="text-sm text-gray-400">Plans</p>
-//           </div>
-//           <div className="text-center cursor-pointer" onClick={openModal}>
-//             <p className="text-xl font-bold">{user.followers.length || 0}</p>
-//             <p className="text-sm text-gray-400">Followers</p>
-//           </div>
-//           <div className="text-center">
-//             <p className="text-xl font-bold">{user.badge || "Level 1"}</p>
-//             <p className="text-sm text-gray-400">Badge</p>
-//           </div>
-//         </div>
-//         <div className="flex space-x-4 mt-8">
-//           <button
-//             onClick={handleEditProfile}
-//             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full shadow-md transition duration-200"
-//           >
-//             Edit Profile
-//           </button>
-//           <button
-//             onClick={handlecreateplan}
-//             className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full shadow-md transition duration-200"
-//           >
-//             Make a Plan
-//           </button>
-//         </div>
-//       </section>
-
-//       {/* Modal */}
-//       {isModalOpen && (
-//         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//           <div className="bg-white text-black rounded-lg shadow-lg w-96 p-6 relative">
-//             <button
-//               onClick={closeModal}
-//               className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full shadow-md"
-//             >
-//               X
-//             </button>
-//             <h2 className="text-2xl font-bold mb-4">Followers</h2>
-//             <ul className="max-h-60 overflow-y-auto divide-y divide-gray-200">
-//               {user.followers.length > 0 ? (
-//                 user.followers.map((follower, index) => (
-//                   <li
-//                     key={index}
-//                     className="p-4 flex items-center space-x-4 hover:bg-gray-100"
-//                   >
-//                     <img
-//                       src={follower.photo || "/default-profile.jpg"}
-//                       alt={`${follower.name}'s profile`}
-//                       className="w-12 h-12 rounded-full"
-//                     />
-//                     <div>
-//                       <p className="text-lg font-bold">{follower.name || "Unknown"}</p>
-//                       <p className="text-sm text-gray-500">
-//                         {follower.location || "Location: Unknown"}
-//                       </p>
-//                     </div>
-//                   </li>
-//                 ))
-//               ) : (
-//                 <p className="text-gray-500 text-center">No Followers</p>
-//               )}
-//             </ul>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Plans Section */}
-//       <section className="w-11/12 md:w-9/12 mx-auto mt-16 bg-gray-800 rounded-lg shadow-lg p-6">
-//         <h2 className="text-2xl font-bold mb-4">Plans</h2>
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//           {paginatedUpcomingPlans.map((plan, index) => (
-//             <div
-//               key={index}
-//               className="bg-white rounded-lg shadow-lg p-4 hover:scale-105 transition-transform cursor-pointer"
-//               onClick={() => navigate(`/showplans/${plan._id}`)}
-//             >
-//               <img
-//                 src={plan.photo || "/default-plan.jpg"}
-//                 alt={plan.title}
-//                 className="w-full h-32 object-cover rounded-t-lg"
-//               />
-//               <h3 className="text-lg font-bold mt-4">{plan.title}</h3>
-//               <p className="text-gray-500">{new Date(plan.date).toLocaleDateString()}</p>
-//             </div>
-//           ))}
-//         </div>
-//       </section>
-//     </div>
-//   ) : null}
-// </div>
-
-        
     );
 }
 

@@ -251,16 +251,16 @@ function ProfilePage() {
                         {/* Animated gradient border effect */}
                         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-indigo-500/20 rounded-3xl blur-xl -z-10"></div>
                         
-                        <div className="relative md:absolute md:bottom-[130px] group">
+                        <div className="relative md:absolute md:left-8 md:-top-16 group">
                             <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <img
                                 src={user.photo || "/default-profile.jpg"}
                                 alt={`${user.name}'s profile`}
-                                className={`relative ${getBorderColor(user.gender)} w-40 h-40 rounded-full border-4 shadow-2xl transform group-hover:scale-105 transition-all duration-300`}
+                                className={`relative ${getBorderColor(user.gender)} w-32 h-32 rounded-full border-4 shadow-2xl transform group-hover:scale-105 transition-all duration-300`}
                             />
                         </div>
 
-                        <div className="md:w-1/2 flex flex-col mt-20 md:mt-16 ml-4 space-y-2">
+                        <div className="md:w-1/2 flex flex-col mt-20 md:mt-16 md:ml-4 space-y-2">
                             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent animate-gradient">{user.name}</h1>
                             <p className="text-gray-300 flex items-center gap-2">
                                 <svg className="w-5 h-5 text-pink-400" fill="currentColor" viewBox="0 0 20 20">

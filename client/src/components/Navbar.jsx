@@ -5,20 +5,33 @@ import { useNavigate } from "react-router-dom";
 const Navbar = ({ user }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > 50) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
       }
+
+      // Hide navbar when scrolling down, show when scrolling up
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   const logout = () => {
     localStorage.removeItem('token');
@@ -30,7 +43,9 @@ const Navbar = ({ user }) => {
 
   return (
     <nav
-      className={`fixed top-0 w-full transition-all duration-300 z-50 ${isScrolled ? "bg-black shadow-lg py-4" : "py-6"}`}
+      className={`fixed top-0 w-full transition-all duration-300 z-50 ${
+        isScrolled ? "bg-black shadow-lg py-4" : "py-6"
+      } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center gap-3">

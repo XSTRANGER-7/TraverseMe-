@@ -18,6 +18,43 @@ body {
   .animate-spin-slow {
     animation: spin-slow 10s linear infinite;
   }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px);
+    }
+    33% {
+      transform: translateY(-15px) translateX(5px);
+    }
+    66% {
+      transform: translateY(-5px) translateX(-5px);
+    }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 0.5s;
+  }
+
+  .animation-delay-1000 {
+    animation-delay: 1s;
+  }
+
+  .animation-delay-1500 {
+    animation-delay: 1.5s;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
 /*  */
 
 .rotate-card {
@@ -35,7 +72,6 @@ body {
     transform: rotateY(180deg);
   }
 }
-
 
 /* Custom styles for toast notification */
 .Toastify__toast--success {

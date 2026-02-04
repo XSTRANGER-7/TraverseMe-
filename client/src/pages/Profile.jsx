@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import header from '../assets/img2.jpg';
-import bgImage from '../assets/bgg.png'; // Use the provided image
+import bgImage from '../assets/bgg.png';
+import backIcon from '../assets/back.png'; // Import back icon
 import EditProfile from "./EditProfile";
 
 function ProfilePage() {
@@ -231,6 +232,22 @@ function ProfilePage() {
                 <div className="flex flex-col items-center relative z-10">
                     {/* Header with only background image */}
                     <div className="relative w-full h-56 overflow-hidden bg-black">
+                        {/* Back button - top left with image */}
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="absolute top-12 left-6 z-10 flex items-center gap-2 px-5 py-3  hover:from-pink-600/30 hover:to-rose-600/30 border border-pink-700/60 hover:border-pink-600/40 backdrop-blur-sm rounded-full text-white font-semibold shadow-lg hover:shadow-pink-500/30 transform hover:scale-101 transition-all duration-300 group"
+                        >
+                            <img 
+                                src={backIcon} 
+                                alt="Back" 
+                                className="w-7 h-7 group-hover:scale-102 transition-transform duration-300"
+                                style={{
+                                    filter: 'brightness(0) saturate(100%) invert(65%) sepia(56%) saturate(2500%) hue-rotate(310deg) brightness(80%) contrast(95%)'
+                                }}
+                            />
+                            <span className="text-base font-semibold">Back</span>
+                        </button>
+
                         {/* Background image on top right - complete image visible */}
                         <div className="absolute -top-20 right-0 w-[410px] h-[410px] opacity-50">
                             <img 

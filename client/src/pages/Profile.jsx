@@ -262,7 +262,7 @@ function ProfilePage() {
                     </div>
 
                     {/* Profile Card */}
-                    <div className="absolute top-32 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-400/20 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-pink-400/35 transition-all duration-500">
+                    <div className="absolute top-28 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-400/20 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-pink-400/35 transition-all duration-500">
                         {/* Subtle glow effect - updated colors */}
                         <div className="absolute inset-0 bg-gradient-to-r from-pink-400/5 via-rose-400/5 to-pink-400/5 rounded-3xl blur-xl -z-10"></div>
                         

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import header from '../assets/img2.jpg';
-import bgImage from '../assets/shape.png'; // Use the provided image
+import bgImage from '../assets/bgg.png'; // Use the provided image
 import EditProfile from "./EditProfile";
 
 function ProfilePage() {
@@ -232,7 +232,7 @@ function ProfilePage() {
                     {/* Header with only background image */}
                     <div className="relative w-full h-56 overflow-hidden bg-black">
                         {/* Background image on top right - complete image visible */}
-                        <div className="absolute -top-10 right-0 w-[300px] h-[300px] opacity-40">
+                        <div className="absolute -top-20 right-0 w-[410px] h-[410px] opacity-50">
                             <img 
                                 src={bgImage} 
                                 alt="" 

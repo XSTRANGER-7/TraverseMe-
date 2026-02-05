@@ -47,28 +47,42 @@ app.use(express.json());
 const JWT_SECRET = process.env.JWT_SECRET || 'K2qNFsd9mBa/6HqPjL+rtYnPsc6RNuqOxepQcaRIgCI=';
 
 // Socket.IO Logic
+const connectedUsers = new Map(); // Track connected users by socket ID
+
 io.on("connection", (socket) => {
-    console.log("A user connected");
+    console.log(`A user connected: ${socket.id}`);
+    connectedUsers.set(socket.id, { joinedGroups: [] });
   
     // Join a group room
     socket.on("joinGroup", (groupId) => {
+      // Leave previous groups to prevent multiple joins
+      const userData = connectedUsers.get(socket.id);
+      if (userData && userData.joinedGroups.includes(groupId)) {
+        console.log(`User ${socket.id} already in group: ${groupId}`);
+        return;
+      }
+      
       socket.join(groupId);
-      console.log(`User joined group: ${groupId}`);
+      if (userData) {
+        userData.joinedGroups.push(groupId);
+      }
+      console.log(`User ${socket.id} joined group: ${groupId}`);
     });
   
-  // Handle group message
+    // Handle group message
     socket.on("sendGroupMessage", (message) => {
         const { groupId } = message;
-        io.to(groupId).emit("receiveGroupMessage", message); // Broadcast message to group
-      });
+        io.to(groupId).emit("receiveGroupMessage", message);
+    });
     
     // Send one-on-one message
     socket.on("sendPrivateMessage", ({ toUserId, message }) => {
       io.to(toUserId).emit("receivePrivateMessage", message);
     });
   
-    socket.on("disconnect", () => {
-      console.log("A user disconnected");
+    socket.on("disconnect", (reason) => {
+      console.log(`User disconnected: ${socket.id}, Reason: ${reason}`);
+      connectedUsers.delete(socket.id);
     });
   });
 

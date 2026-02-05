@@ -68,8 +68,8 @@ function UsersList() {
     };
 
     return (
-        <div className="container mx-auto px-0 py-12 bg-gradient-to-b from-black via-lightDark to-black ">
-            <h2 className="text-4xl text-center mb-8 text-gray-300">Meet Other Users</h2>
+        <div className="container mx-auto px-0 py-12 bg-black min-h-screen">
+            <h2 className="text-4xl text-center mb-8 text-gray-100 font-bold">Meet Other Users</h2>
 
             {/* Search input */}
             <div className="mb-8 flex justify-center">
@@ -78,7 +78,7 @@ function UsersList() {
                     placeholder="Search for a friend..."
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="px-4 py-2 border rounded-lg bg-dark"
+                    className="px-4 py-2 border border-gray-700 rounded-lg bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500"
                 />
             </div>
 
@@ -89,7 +89,7 @@ function UsersList() {
                         filteredUsers.map((otherUser) => (
                             <div
                                 key={otherUser._id}
-                                className="profileCard border-1 hover:border-gray-600 border-gray-800 rounded-lg px-20 py-16 shadow-lg text-center flex flex-col items-center cursor-pointer transition-transform transform"
+                                className="profileCard bg-gradient-to-b from-gray-900 to-black border-1 border-gray-800 hover:border-pink-500 rounded-lg px-20 py-16 shadow-lg text-center flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 hover:shadow-[0_8px_20px_rgba(236,72,153,0.4)]"
                                 onClick={() => handleProfileClick(otherUser._id)}
                             >
                                 <img
@@ -98,23 +98,23 @@ function UsersList() {
                                         'https://example.com/default-avatar.png'
                                     }
                                     alt={`${otherUser.name}'s profile`}
-                                    className={`w-32 h-32 rounded-full mb-4 ${getBorderColor(otherUser.gender)} border-2`}
+                                    className={`w-32 h-32 rounded-full mb-4 ${getBorderColor(otherUser.gender)} border-2 shadow-lg`}
                                 />
-                                <h3 className="text-xl font-bold">{otherUser.name}</h3>
+                                <h3 className="text-xl font-bold text-gray-100">{otherUser.name}</h3>
                                 <p className="text-sm text-gray-400">
                                     Location: {otherUser.location || 'Unknown'}
                                 </p>
                                 <p className="text-sm text-gray-300 my-2">
                                     {otherUser.bio || 'No bio available'}
                                 </p>
-                                <p className="text-md font-bold text-gray-400">
+                                <p className="text-md font-bold text-pink-400">
                                     Followers: {otherUser?.followers?.length || '0'}
                                 </p>
                                 <div className="flex flex-col mt-4">
-                                    <button className="bg-white text-black rounded-full px-6 py-3 my-4"
+                                    <button className="bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-400 text-white font-semibold rounded-full px-6 py-3 my-4 shadow-lg shadow-pink-500/50 transition-all"
                                     onClick={(event) => {
-                                        event.stopPropagation(); // Prevents triggering the parent div's onClick
-                                        movetomsg(otherUser._id); // Pass otherUser._id to the function if needed
+                                        event.stopPropagation();
+                                        movetomsg(otherUser._id);
                                         }}
                                         >
                                         Message
@@ -123,7 +123,7 @@ function UsersList() {
                             </div>
                         ))
                     ) : (
-                        <div className="text-center col-span-full py-10 text-xl">
+                        <div className="text-center col-span-full py-10 text-xl text-gray-400">
                             No users found.
                         </div>
                     )}
@@ -155,7 +155,6 @@ function UsersList() {
                     className="mySwiper"
                     ref={swiperRef}
                     onSlideChange={(swiper) => {
-                        // Dynamically add extra classes for deeper depth effect
                         const slides = swiper.slides;
                         slides.forEach((slide) => slide.classList.remove('swiper-slide-prev-prev', 'swiper-slide-next-next'));
                     
@@ -170,35 +169,33 @@ function UsersList() {
                     {allUsers.map((otherUser) => (
                         <SwiperSlide key={otherUser._id}>
                             <div
-                                className="profileCard border-1 hover:border-gray-600 border-gray-800 rounded-lg px-20 py-16 shadow-lg text-center flex flex-col items-center cursor-pointer transition-transform transform"
+                                className="profileCard bg-gradient-to-b from-gray-900 to-black border-1 border-gray-800 hover:border-pink-500 rounded-lg px-20 py-16 shadow-lg text-center flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 hover:shadow-[0_8px_20px_rgba(236,72,153,0.4)]"
                                 onClick={() => handleProfileClick(otherUser._id)}
                             >
-                                {/* {console.log("f",otherUser._id)} */}
                                 <img
                                     src={
                                         otherUser.photo ||
                                         'https://example.com/default-avatar.png'
                                     }
                                     alt={`${otherUser.name}'s profile`}
-                                    className={`w-32 h-32 rounded-full mb-4 ${getBorderColor(otherUser.gender)} border-4`}
+                                    className={`w-32 h-32 rounded-full mb-4 ${getBorderColor(otherUser.gender)} border-4 shadow-lg`}
                                 />
-                                <h3 className="text-xl font-bold">{otherUser.name}</h3>
+                                <h3 className="text-xl font-bold text-gray-100">{otherUser.name}</h3>
                                 <p className="text-sm text-gray-400">
                                     Location: {otherUser.location || 'Unknown'}
                                 </p>
                                 <p className="text-sm text-gray-300 my-2">
                                     {otherUser.bio || 'No bio available'}
                                 </p>
-                                <p className="text-md font-bold text-gray-400">
+                                <p className="text-md font-bold text-pink-400">
                                     Followers: {otherUser?.followers?.length || '0'}
                                 </p>
                                 <div className="flex flex-col mt-4">
-                                    <button className="bg-white text-black rounded-full px-6 py-3 my-4" 
+                                    <button className="bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-400 text-white font-semibold rounded-full px-6 py-3 my-4 shadow-lg shadow-pink-500/50 transition-all" 
                                     onClick={(event) => {
-                                    event.stopPropagation(); // Prevents triggering the parent div's onClick
-                                    movetomsg(otherUser._id); // Pass otherUser._id to the function if needed
+                                    event.stopPropagation();
+                                    movetomsg(otherUser._id);
                                     }}>
-                                        {/* {console.log("p",otherUser._id)} */}
                                         Message
                                     </button>
                                 </div>

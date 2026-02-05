@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const FAQPage = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -28,6 +29,13 @@ const FAQPage = () => {
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+
+  useEffect(() => {
+    // Example: Fetch data from an API
+    axios.get("/api/data").then((response) => {
+      console.log(response.data);
+    });
+  }, []);
 
   return (
     <div className="bg-lightDark2 py-12 px-4 min-h-screen flex flex-col items-center">

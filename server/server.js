@@ -650,26 +650,47 @@ app.get('/requeststatus2', authenticateToken, async (req, res) => {
 
 
 app.put('/profile', authenticateToken , async (req, res) => {
-    const { name, location } = req.body; // Destructure the data from the request body
-    // console.log('Name:', name, 'Location:', location);
-    // console.log('User:', req.body);
-        try {
+    const { name, location, photo, bio } = req.body; // Destructure the data from the request body
+    console.log('Profile update request:', { name, location, photo, bio });
+    
+    try {
         const user = await User.findById(req.user.id); // Fetch the user from the database
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Validate bio if provided
+        if (bio !== undefined) {
+            if (!Array.isArray(bio)) {
+                return res.status(400).json({ message: 'Bio must be an array' });
+            }
+            if (bio.length > 6) {
+                return res.status(400).json({ message: 'Maximum 6 bio keywords allowed' });
+            }
+            if (bio.some(keyword => !keyword || keyword.length > 10)) {
+                return res.status(400).json({ message: 'Each bio keyword must be 1-10 characters' });
+            }
+        }
+
         // Update user details
-        user.name = name;
-        user.location = location;
-        // user.bio = bio;
+        if (name !== undefined) user.name = name;
+        if (location !== undefined) user.location = location;
+        if (photo !== undefined) user.photo = photo;
+        if (bio !== undefined) user.bio = bio;
 
         await user.save(); // Save the updated user object
+        
+        console.log('User updated successfully:', { 
+            id: user._id, 
+            name: user.name, 
+            bio: user.bio 
+        });
+        
         res.status(200).json(user); // Respond with the updated user
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error updating profile:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 });
 

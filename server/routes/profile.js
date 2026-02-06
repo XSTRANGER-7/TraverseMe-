@@ -113,42 +113,16 @@ function ProfilePage() {
     const handleSaveProfile = async (updatedUser) => {
         try {
             const token = localStorage.getItem('token');
-            
-            if (!token) {
-                setError('No authentication token found');
-                return;
-            }
-            
-            // Ensure bio is an array
-            const profileData = {
-                name: updatedUser.name,
-                location: updatedUser.location,
-                photo: updatedUser.photo,
-                bio: Array.isArray(updatedUser.bio) ? updatedUser.bio : []
-            };
-            
-            console.log('Sending profile update:', profileData);
-            
-            const response = await axios.put(
-                'http://localhost:7000/profile', 
-                profileData,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-            
-            console.log('Profile update response:', response.data);
-            
-            if (response.data) {
-                setUser(response.data);
-                setEditing(false);
-            }
+            const response = await axios.put('http://localhost:7000/profile', updatedUser, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setUser(response.data); // Update user state with new data
+            setEditing(false); // Exit editing mode
         } catch (error) {
-            console.error('Error updating profile:', error.response?.data || error.message);
-            setError(error.response?.data?.message || 'Failed to update profile. Please try again.');
+            console.error('Error updating profile:', error);
+            setError('Failed to update profile. Please try again.');
         }
     };
     

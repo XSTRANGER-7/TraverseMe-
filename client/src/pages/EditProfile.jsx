@@ -24,7 +24,7 @@ function EditProfile({ user, onSave, onCancel }) {
             setBioInput(value);
             setBioError('');
         } else {
-            setBioError('Max 10 characters per keyword');
+            setBioError('Max 15 characters per keyword');
         }
     };
 
@@ -127,9 +127,9 @@ function EditProfile({ user, onSave, onCancel }) {
                                         handleAddBioKeyword(e);
                                     }
                                 }}
-                                placeholder="Add keyword (max 10 chars)"
+                                placeholder="Add keyword (max 15 chars)"
                                 className="flex-1 px-4 py-3 bg-gray-900/50 border border-pink-500/30 rounded-xl text-white focus:outline-none focus:border-pink-500/60 focus:ring-2 focus:ring-pink-500/20 transition-all duration-300"
-                                maxLength={10}
+                                maxLength={15}
                             />
                             <button
                                 type="button"

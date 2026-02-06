@@ -11,9 +11,9 @@ const userSchema = new mongoose.Schema({
         default: [],
         validate: {
             validator: function(v) {
-                return v.length <= 6 && v.every(keyword => keyword && keyword.length <= 10);
+                return v.length <= 6 && v.every(keyword => keyword && keyword.length <= 15);
             },
-            message: 'Bio can have max 6 keywords with max 10 characters each'
+            message: 'Bio can have max 6 keywords with max 15 characters each'
         }
     },
     photo: { type: String, default: null },  // Optional field for user profile photo

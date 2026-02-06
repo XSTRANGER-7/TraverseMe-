@@ -668,8 +668,8 @@ app.put('/profile', authenticateToken , async (req, res) => {
             if (bio.length > 6) {
                 return res.status(400).json({ message: 'Maximum 6 bio keywords allowed' });
             }
-            if (bio.some(keyword => !keyword || keyword.length > 10)) {
-                return res.status(400).json({ message: 'Each bio keyword must be 1-10 characters' });
+            if (bio.some(keyword => !keyword || keyword.length > 15)) {
+                return res.status(400).json({ message: 'Each bio keyword must be 1-15 characters' });
             }
         }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import header from '../assets/img2.jpg';
@@ -19,6 +19,8 @@ function ProfilePage() {
     const [followersDetails, setFollowersDetails] = useState([]);
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     const [photoSelectorOpen, setPhotoSelectorOpen] = useState(false);
+    const profileCardRef = useRef(null);
+    const [profileCardHeight, setProfileCardHeight] = useState(0);
     
     // Edit form states
     const [editedLocation, setEditedLocation] = useState('');
@@ -129,6 +131,17 @@ function ProfilePage() {
         setBioError('');
         setPhotoSelectorOpen(false);
     }
+
+    // measure profile card to avoid overlap with plans section
+    useEffect(() => {
+        const measure = () => {
+            const h = profileCardRef.current?.offsetHeight || 0;
+            setProfileCardHeight(h);
+        };
+        measure();
+        window.addEventListener('resize', measure);
+        return () => window.removeEventListener('resize', measure);
+    }, [editing, user]);
 
     const handlecreateplan = () => {
         navigate("/createplan");
@@ -333,7 +346,7 @@ function ProfilePage() {
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black"></div>
                     </div>
 
-                    <div className="absolute top-20 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-400/20 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-pink-400/35 transition-all duration-500">
+                    <div ref={profileCardRef} className={`absolute top-36 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-400/20 shadow-2xl rounded-3xl mt-16 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-pink-400/35 transition-all duration-500 ${editing ? 'pb-6 md:pb-10' : ''}`}>
                         <div className="absolute inset-0 bg-gradient-to-r from-pink-400/5 via-rose-400/5 to-pink-400/5 rounded-3xl blur-xl -z-10"></div>
                         
                         <div className="relative md:absolute md:left-8 md:-top-16 group">
@@ -357,8 +370,8 @@ function ProfilePage() {
                             )}
                         </div>
 
-                        <div className="md:w-1/2 flex flex-col mt-20 md:mt-16 md:ml-4 space-y-2">
-                            <h1 className="text-4xl font-bold text-white">{user.name}</h1>
+                        <div className={`md:w-1/2 flex flex-col mt-16 md:mt-12 md:ml-4 ${editing ? 'space-y-3' : 'space-y-2'}`}>
+                            <h1 className={`text-4xl font-bold text-white`}>{user.name}</h1>
                             
                             <div className="relative group/location">
                                 {editing ? (
@@ -626,7 +639,7 @@ function ProfilePage() {
                         </div>
                     )}
 
-                    <div className="w-11/12 md:w-9/12 mt-[420px] md:mt-56 bg-gradient-to-br from-gray-900 to-black border border-pink-500/20 shadow-2xl rounded-3xl p-8 hover:border-pink-500/30 transition-all duration-500 mb-12">
+                    <div className={`w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-500/20 shadow-2xl rounded-3xl p-8 hover:border-pink-500/30 transition-all duration-500 mb-12`} style={{ marginTop: profileCardHeight ? `${profileCardHeight + 28}px` : undefined }}>
                         <h2 className="text-3xl font-bold text-white mb-6">Plans</h2>
                         
                         <div className="grid grid-cols-1 gap-8">

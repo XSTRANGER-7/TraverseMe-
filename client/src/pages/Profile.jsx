@@ -269,7 +269,7 @@ function ProfilePage() {
                     </div>
 
                     {/* Profile Card */}
-                    <div className="absolute top-28 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-400/20 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-pink-400/35 transition-all duration-500">
+                    <div className="absolute top-20 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-400/20 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-pink-400/35 transition-all duration-500">
                         {/* Subtle glow effect - updated colors */}
                         <div className="absolute inset-0 bg-gradient-to-r from-pink-400/5 via-rose-400/5 to-pink-400/5 rounded-3xl blur-xl -z-10"></div>
                         
@@ -311,7 +311,7 @@ function ProfilePage() {
                             )}
                         </div>
 
-                        <div className="w-11/12 md:w-1/2 flex flex-col items-center mt-8 md:mt-0">
+                        <div className="w-11/12 md:w-1/2 flex flex-col items-center mt-12 md:mt-0">
                             <div className="flex justify-around w-full mb-6 gap-4">
                                 <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 flex-1">
                                     <p className="text-3xl font-bold text-pink-500">

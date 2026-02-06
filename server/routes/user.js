@@ -80,17 +80,6 @@ router.get('/user/profile', async (req, res) => {
             user.bio = [];
         }
 
-
-
-
-
-
-
-
-
-module.exports = router;});    }        res.status(500).json({ message: 'Server error', error: error.message });        console.error('Error fetching user profile:', error);    } catch (error) {        res.json(user);            user.bio = [];
-        }
-
         res.json(user);
     } catch (error) {
         console.error('Error fetching user profile:', error);

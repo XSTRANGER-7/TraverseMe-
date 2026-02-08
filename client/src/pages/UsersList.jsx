@@ -78,7 +78,7 @@ function UsersList() {
                     placeholder="Search for a friend..."
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="px-4 py-2 border border-gray-700 rounded-lg bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500"
+                    className="px-4 py-2 border border-gray-700 rounded-lg bg-gray-900 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400"
                 />
             </div>
 
@@ -89,7 +89,7 @@ function UsersList() {
                         filteredUsers.map((otherUser) => (
                             <div
                                 key={otherUser._id}
-                                className="profileCard bg-gradient-to-b from-gray-900 to-black border-1 border-gray-800 hover:border-pink-500 rounded-lg px-20 py-16 shadow-lg text-center flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 hover:shadow-[0_8px_20px_rgba(236,72,153,0.4)]"
+                                className="profileCard bg-gradient-to-b from-gray-900 to-black border-1 border-gray-800 hover:border-red-400 rounded-lg px-20 py-16 shadow-lg text-center flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 hover:shadow-[0_8px_20px_rgba(248,113,113,0.4)]"
                                 onClick={() => handleProfileClick(otherUser._id)}
                             >
                                 <img
@@ -107,11 +107,11 @@ function UsersList() {
                                 <p className="text-sm text-gray-300 my-2">
                                     {otherUser.bio || 'No bio available'}
                                 </p>
-                                <p className="text-md font-bold text-pink-400">
+                                <p className="text-md font-bold text-red-400">
                                     Followers: {otherUser?.followers?.length || '0'}
                                 </p>
                                 <div className="flex flex-col mt-4">
-                                    <button className="bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-400 text-white font-semibold rounded-full px-6 py-3 my-4 shadow-lg shadow-pink-500/50 transition-all"
+                                    <button className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-semibold rounded-full px-6 py-3 my-4 shadow-lg shadow-red-400/50 transition-all"
                                     onClick={(event) => {
                                         event.stopPropagation();
                                         movetomsg(otherUser._id);
@@ -169,7 +169,7 @@ function UsersList() {
                     {allUsers.map((otherUser) => (
                         <SwiperSlide key={otherUser._id}>
                             <div
-                                className="profileCard bg-gradient-to-b from-gray-900 to-black border-1 border-gray-800 hover:border-pink-500 rounded-lg px-20 py-16 shadow-lg text-center flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 hover:shadow-[0_8px_20px_rgba(236,72,153,0.4)]"
+                                className="profileCard bg-gradient-to-b from-gray-900 to-black border-1 border-gray-800 hover:border-red-400 rounded-lg px-20 py-16 shadow-lg text-center flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 hover:shadow-[0_8px_20px_rgba(248,113,113,0.4)]"
                                 onClick={() => handleProfileClick(otherUser._id)}
                             >
                                 <img
@@ -187,11 +187,11 @@ function UsersList() {
                                 <p className="text-sm text-gray-300 my-2">
                                     {otherUser.bio || 'No bio available'}
                                 </p>
-                                <p className="text-md font-bold text-pink-400">
+                                <p className="text-md font-bold text-red-400">
                                     Followers: {otherUser?.followers?.length || '0'}
                                 </p>
                                 <div className="flex flex-col mt-4">
-                                    <button className="bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-500 hover:to-pink-400 text-white font-semibold rounded-full px-6 py-3 my-4 shadow-lg shadow-pink-500/50 transition-all" 
+                                    <button className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-semibold rounded-full px-6 py-3 my-4 shadow-lg shadow-red-400/50 transition-all" 
                                     onClick={(event) => {
                                     event.stopPropagation();
                                     movetomsg(otherUser._id);

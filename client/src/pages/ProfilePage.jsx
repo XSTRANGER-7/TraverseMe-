@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import bgImage from '../assets/bgg.png';
@@ -11,11 +11,11 @@ function ProfilePage() {
   const [allPlans, setAllPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { userId } = useParams(); // Get userId from route
-  const [currentUpcomingPage, setCurrentUpcomingPage] = useState(1); // Separate state for upcoming page
-  const [currentPastPage, setCurrentPastPage] = useState(1); // Separate state for past page
-  const [itemsPerPage, setItemsPerPage] = useState(3); // Initially show 3 items per page
-  const [viewMore, setViewMore] = useState(false); // View More toggle
+  const { userId } = useParams();
+  const [currentUpcomingPage, setCurrentUpcomingPage] = useState(1);
+  const [currentPastPage, setCurrentPastPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [viewMore, setViewMore] = useState(false);
   const [requestStatus, setRequestStatus] = useState(null);
 
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function ProfilePage() {
 
   useEffect(() => {
     if (!token) {
-      navigate("/auth"); // Redirect to auth if token is not present
+      navigate("/auth");
       return;
     }
 
@@ -43,12 +43,11 @@ function ProfilePage() {
           },
         }
       );
-      // console.log('User data:', response.data);
-      setUser(response.data.user); // Assuming the user data is returned under 'user'
+      setUser(response.data.user);
     } catch (error) {
       console.error("Error fetching user data:", error);
       setError("Failed to fetch user data. Please try again.");
-      navigate("/auth"); // Redirect to auth if error occurs
+      navigate("/auth");
     }
   };
 
@@ -62,8 +61,7 @@ function ProfilePage() {
           },
         }
       );
-      // console.log("User plans:", response.data.plans);
-      setAllPlans(response.data.plans); // Assuming plans data is under 'plans'
+      setAllPlans(response.data.plans);
 
       const requestStatusResponse = await axios.get(
         "http://localhost:7000/requeststatus2",
@@ -73,14 +71,11 @@ function ProfilePage() {
           },
         }
       );
-      // console.log('Request Status Response:', requestStatusResponse.data);
 
-      // Ensure the response is valid and map statuses to plan IDs
       if (
         requestStatusResponse.data &&
         typeof requestStatusResponse.data === "object"
       ) {
-        // console.log("Request Status Response:", requestStatusResponse.data);
         setRequestStatus(requestStatusResponse.data);
       } else {
         console.error(
@@ -98,7 +93,6 @@ function ProfilePage() {
   };
 
   const handleFollowChange = () => {
-    // Refetch user data to update followers count
     fetchUserData();
   };
 
@@ -160,24 +154,19 @@ function ProfilePage() {
     }
   };
 
-  // View More functionality
   const handleViewMore = () => {
-    setItemsPerPage(6); // Change to 6 items per page
-    setViewMore(true); // Show pagination buttons
-    setCurrentUpcomingPage(1); // Reset to page 1
-    setCurrentPastPage(1); // Reset to page 1
+    setItemsPerPage(6);
+    setViewMore(true);
+    setCurrentUpcomingPage(1);
+    setCurrentPastPage(1);
   };
 
   const handleJoinRequest = async (planId) => {
     try {
-    //   console.log("Joining plan:", planId);
-    //   console.log("Login ID:", meriid);
-      // console.log('User ID:', userId);
       const response = await axios.post(
         `http://localhost:7000/joinplan/${planId}`,
         { meriid }
       );
-    //   console.log("Join request response:", response.data);
       if (response.data.success) {
         setRequestStatus((prev) => ({ ...prev, [planId]: "pending" }));
         alert("Join request sent. Waiting for approval.");
@@ -204,42 +193,34 @@ function ProfilePage() {
   useEffect(() => {
     if (allPlans.length > 0) {
       allPlans.forEach((plan) => {
-        checkRequestStatus(plan._id); // Check status for each plan
+        checkRequestStatus(plan._id);
       });
     }
   }, [allPlans]);
 
   const handlePlanClick = (planId) => {
-    // console.log('Request status:', requestStatus[planId]);
     if (requestStatus[planId] === "approved") {
-      navigate(`/showplans/${planId}`); // Navigate to plan detail page if approved
+      navigate(`/showplans/${planId}`);
     } else {
       alert("You must wait for the plan creator to approve your request.");
     }
   };
 
   const pastplansinfo = (planId) => {
-    // console.log("user",meriid);
-
     const plan = pastPlans.find((plan) => plan._id === planId);
-    // console.log("plann",plan);
 
     if (!plan) {
       console.error("Plan not found!");
       alert("Plan not found!");
       return;
     }
-    // console.log("plan",plan.requests[0]);
 
     const userRequest = plan.requests?.find(
       (request) => request.userId === meriid
     );
-    // console.log(userRequest);
     if (userRequest && userRequest.status === "approved") {
-      // console.log('User is approved, navigating to plan details...');
       navigate(`/showplans/${planId}`);
     } else {
-      // If user request is not present or not approved, show alert
       alert("You don't have access to this plan!");
     }
 
@@ -247,37 +228,32 @@ function ProfilePage() {
   };
 
   const movetomsg = () => {
-    // navigate("/chat");
     navigate(`/chat`, { state: { otherUserId: user._id } });
   }
 
   const getBorderColor = (gender) => {
     if (gender === 'male') return 'border-blue-500';
-    if (gender === 'female') return 'border-pink-500';
-    return 'border-gray-300'; // Default border color
-};
+    if (gender === 'female') return 'border-red-400';
+    return 'border-gray-300';
+  };
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      {/* Remove all background elements - complete black background */}
-
       {loading ? (
         <div className="flex items-center justify-center min-h-screen">
           <div className="relative">
-            <div className="w-20 h-20 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
-            <div className="absolute inset-0 w-20 h-20 border-4 border-rose-400 border-t-transparent rounded-full animate-spin animation-delay-1000"></div>
+            <div className="w-20 h-20 border-4 border-red-400 border-t-transparent rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-20 h-20 border-4 border-red-300 border-t-transparent rounded-full animate-spin animation-delay-1000"></div>
           </div>
         </div>
       ) : error ? (
         <p className="text-red-400 text-center text-lg font-semibold">{error}</p>
       ) : user ? (
         <div className="flex flex-col items-center relative z-10">
-          {/* Header with only background image */}
           <div className="relative w-full h-56 overflow-hidden bg-black">
-            {/* Back button - top left with image */}
             <button
               onClick={() => navigate(-1)}
-              className="absolute top-12 left-6 z-10 flex items-center gap-2 px-5 py-3 hover:from-pink-600/30 hover:to-rose-600/30 border border-pink-700/60 hover:border-pink-600/40 backdrop-blur-sm rounded-full text-white font-semibold shadow-lg hover:shadow-pink-500/30 transform hover:scale-101 transition-all duration-300 group"
+              className="absolute top-12 left-6 z-10 flex items-center gap-2 px-5 py-3 hover:from-red-600/30 hover:to-red-600/30 border border-red-700/60 hover:border-red-600/40 backdrop-blur-sm rounded-full text-white font-semibold shadow-lg hover:shadow-red-500/30 transform hover:scale-101 transition-all duration-300 group"
             >
               <img 
                 src={backIcon} 
@@ -290,7 +266,6 @@ function ProfilePage() {
               <span className="text-base font-semibold">Back</span>
             </button>
 
-            {/* Background image on top right - complete image visible */}
             <div className="absolute -top-20 right-0 w-[410px] h-[410px] opacity-50">
               <img 
                 src={bgImage} 
@@ -299,16 +274,13 @@ function ProfilePage() {
               />
             </div>
             
-            {/* Gradient overlay for smooth transition */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black"></div>
           </div>
-          {/* Profile Card */}
-          <div className="absolute top-28 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-400/20 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-pink-400/35 transition-all duration-500">
-            {/* Subtle glow effect - updated colors */}
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-400/5 via-rose-400/5 to-pink-400/5 rounded-3xl blur-xl -z-10"></div>
+          <div className="absolute top-28 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-red-400/20 shadow-2xl rounded-3xl mt-16 p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-red-400/35 transition-all duration-500">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-400/5 via-red-400/5 to-red-400/5 rounded-3xl blur-xl -z-10"></div>
             
             <div className="relative md:absolute md:left-8 md:-top-16 group">
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full blur-lg opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-500 rounded-full blur-lg opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
               <img
                 src={user.photo || "/default-profile.jpg"}
                 alt={`${user.name}'s profile`}
@@ -319,7 +291,7 @@ function ProfilePage() {
             <div className="md:w-1/2 flex flex-col mt-20 md:mt-16 md:ml-4 space-y-2">
               <h1 className="text-4xl font-bold text-white">{user.name}</h1>
               <p className="text-gray-400 flex items-center gap-2">
-                <svg className="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                 </svg>
                 {user.location || "Unknown"}
@@ -328,20 +300,20 @@ function ProfilePage() {
 
             <div className="w-11/12 md:w-1/2 flex flex-col items-center mt-8 md:mt-0">
               <div className="flex justify-around w-full mb-6 gap-4">
-                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 flex-1">
-                  <p className="text-3xl font-bold text-pink-500">
+                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-red-400/20 hover:border-red-400/40 transition-all duration-300 flex-1">
+                  <p className="text-3xl font-bold text-red-400">
                     {allPlans.length}
                   </p>
                   <p className="text-gray-400 text-sm mt-1">Plans</p>
                 </div>
-                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 flex-1">
-                  <p className="text-3xl font-bold text-pink-500">
+                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-red-400/20 hover:border-red-400/40 transition-all duration-300 flex-1">
+                  <p className="text-3xl font-bold text-red-400">
                     {user.followers.length || 0}
                   </p>
                   <p className="text-gray-400 text-sm mt-1">Followers</p>
                 </div>
-                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 flex-1">
-                  <p className="text-3xl font-bold text-pink-500">
+                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-red-400/20 hover:border-red-400/40 transition-all duration-300 flex-1">
+                  <p className="text-3xl font-bold text-red-400">
                     {user.badge || "Level 1"}
                   </p>
                   <p className="text-gray-400 text-sm mt-1">Badge</p>
@@ -354,7 +326,7 @@ function ProfilePage() {
                 </div>
                 <button 
                   onClick={movetomsg}
-                  className="w-1/2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white px-4 py-3 rounded-full font-semibold shadow-lg hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300"
+                  className="w-1/2 bg-gradient-to-r from-red-500 to-red-500 hover:from-red-400 hover:to-red-400 text-white px-4 py-3 rounded-full font-semibold shadow-lg hover:shadow-red-500/50 transform hover:scale-105 transition-all duration-300"
                 >
                   Message
                 </button>
@@ -362,14 +334,13 @@ function ProfilePage() {
             </div>
           </div>
 
-          {/* User Plans Section */}
-          <div className="w-11/12 md:w-9/12 mt-[420px] md:mt-56 bg-gradient-to-br from-gray-900 to-black border border-pink-500/20 shadow-2xl rounded-3xl p-8 hover:border-pink-500/30 transition-all duration-500 mb-12">
+          <div className="w-11/12 md:w-9/12 mt-[420px] md:mt-56 bg-gradient-to-br from-gray-900 to-black border border-red-400/20 shadow-2xl rounded-3xl p-8 hover:border-red-400/30 transition-all duration-500 mb-12">
             <h2 className="text-3xl font-bold text-white mb-6">Plans</h2>
             
             <div className="grid grid-cols-1 gap-8">
               <div>
-                <h3 className="text-2xl font-semibold text-pink-400 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
+                <h3 className="text-2xl font-semibold text-red-400 mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
                   Upcoming Plans
                 </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -377,7 +348,7 @@ function ProfilePage() {
                     paginatedUpcomingPlans.map((plan, index) => (
                       <div
                         key={index}
-                        className="group bg-gray-900/50 border border-pink-500/20 shadow-xl rounded-2xl overflow-hidden hover:border-pink-500/50 hover:shadow-2xl hover:shadow-pink-500/20 transform hover:scale-105 transition-all duration-300"
+                        className="group bg-gray-900/50 border border-red-400/20 shadow-xl rounded-2xl overflow-hidden hover:border-red-400/50 hover:shadow-2xl hover:shadow-red-400/20 transform hover:scale-105 transition-all duration-300"
                       >
                         <div className="relative overflow-hidden">
                           <img
@@ -388,11 +359,11 @@ function ProfilePage() {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                         </div>
                         <div className="p-5">
-                          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors duration-300">
+                          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300">
                             {plan.title}
                           </h3>
                           <p className="text-gray-400 flex items-center gap-2 mb-4">
-                            <svg className="w-4 h-4 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                             </svg>
                             {new Date(plan.date).toLocaleDateString()}
@@ -401,7 +372,7 @@ function ProfilePage() {
                             {requestStatus && requestStatus[plan._id] !== undefined ? (
                               requestStatus[plan._id] === "approved" ? (
                                 <button
-                                  className="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300"
+                                  className="w-full bg-gradient-to-r from-red-600 to-red-600 hover:from-red-700 hover:to-red-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-red-400/50 transform hover:scale-105 transition-all duration-300"
                                   onClick={() => handlePlanClick(plan._id)}
                                 > 
                                   View Plan
@@ -412,7 +383,7 @@ function ProfilePage() {
                                 </button>
                               ) : (
                                 <button
-                                  className="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300"
+                                  className="w-full bg-gradient-to-r from-red-600 to-red-600 hover:from-red-700 hover:to-red-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-red-400/50 transform hover:scale-105 transition-all duration-300"
                                   onClick={() => handleJoinRequest(plan._id)}
                                 > 
                                   Join Plan
@@ -420,7 +391,7 @@ function ProfilePage() {
                               )
                             ) : (
                               <button
-                                className="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300"
+                                className="w-full bg-gradient-to-r from-red-600 to-red-600 hover:from-red-700 hover:to-red-700 text-white rounded-full py-3 font-semibold shadow-lg hover:shadow-red-400/50 transform hover:scale-105 transition-all duration-300"
                                 onClick={() => handleJoinRequest(plan._id)}
                               > 
                                 Join Plan
@@ -439,10 +410,10 @@ function ProfilePage() {
                   <div className="flex justify-center mt-6 gap-4">
                     <button
                       onClick={handlePreviousUpcomingPage}
-                      className={`px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
+                      className={`px-6 py-3 bg-gradient-to-r from-red-600 to-red-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
                         currentUpcomingPage === 1
                           ? "opacity-50 cursor-not-allowed"
-                          : "hover:from-pink-700 hover:to-rose-700 hover:scale-105 hover:shadow-pink-500/50"
+                          : "hover:from-red-700 hover:to-red-700 hover:scale-105 hover:shadow-red-400/50"
                       }`}
                       disabled={currentUpcomingPage === 1}
                     >
@@ -450,10 +421,10 @@ function ProfilePage() {
                     </button>
                     <button
                       onClick={handleNextUpcomingPage}
-                      className={`px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
+                      className={`px-6 py-3 bg-gradient-to-r from-red-600 to-red-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
                         currentUpcomingPage === totalPagesUpcoming
                           ? "opacity-50 cursor-not-allowed"
-                          : "hover:from-pink-700 hover:to-rose-700 hover:scale-105 hover:shadow-pink-500/50"
+                          : "hover:from-red-700 hover:to-red-700 hover:scale-105 hover:shadow-red-400/50"
                       }`}
                       disabled={currentUpcomingPage === totalPagesUpcoming}
                     >
@@ -535,7 +506,7 @@ function ProfilePage() {
               <div className="flex justify-center mt-8">
                 <button
                   onClick={handleViewMore}
-                  className="px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-full font-semibold shadow-lg hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300"
+                  className="px-8 py-4 bg-gradient-to-r from-red-600 to-red-600 hover:from-red-700 hover:to-red-700 text-white rounded-full font-semibold shadow-lg hover:shadow-red-400/50 transform hover:scale-105 transition-all duration-300"
                 >
                   View More
                 </button>

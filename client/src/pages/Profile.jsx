@@ -311,8 +311,8 @@ function ProfilePage() {
             {loading ? (
                 <div className="flex items-center justify-center min-h-screen">
                     <div className="relative">
-                        <div className="w-20 h-20 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
-                        <div className="absolute inset-0 w-20 h-20 border-4 border-rose-400 border-t-transparent rounded-full animate-spin animation-delay-1000"></div>
+                        <div className="w-20 h-20 border-4 border-red-400 border-t-transparent rounded-full animate-spin"></div>
+                        <div className="absolute inset-0 w-20 h-20 border-4 border-red-400 border-t-transparent rounded-full animate-spin animation-delay-1000"></div>
                     </div>
                 </div>
             ) : error ? (
@@ -322,7 +322,7 @@ function ProfilePage() {
                     <div className="relative w-full h-56 overflow-hidden bg-black">
                         <button
                             onClick={() => navigate(-1)}
-                            className="absolute top-12 left-6 z-10 flex items-center gap-2 px-5 py-3 hover:from-pink-600/30 hover:to-rose-600/30 border border-pink-700/60 hover:border-pink-600/40 backdrop-blur-sm rounded-full text-white font-semibold shadow-lg hover:shadow-pink-500/30 transform hover:scale-101 transition-all duration-300 group"
+                            className="absolute top-12 left-6 z-10 flex items-center gap-2 px-5 py-3 hover:from-red-400/30 hover:to-red-400/30 border border-red-400/60 hover:border-red-400/40 backdrop-blur-sm rounded-full text-white font-semibold shadow-lg hover:shadow-red-400/30 transform hover:scale-101 transition-all duration-300 group"
                         >
                             <img 
                                 src={backIcon} 
@@ -346,11 +346,11 @@ function ProfilePage() {
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black"></div>
                     </div>
 
-                    <div ref={profileCardRef} className={`absolute top-36 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-400/20 shadow-2xl rounded-3xl mt-16 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-pink-400/35 transition-all duration-500 ${editing ? 'pb-6 md:pb-10' : ''}`}>
-                        <div className="absolute inset-0 bg-gradient-to-r from-pink-400/5 via-rose-400/5 to-pink-400/5 rounded-3xl blur-xl -z-10"></div>
+                    <div ref={profileCardRef} className={`absolute top-36 w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-red-400/20 shadow-2xl rounded-3xl mt-16 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center md:items-start hover:border-red-400/35 transition-all duration-500 ${editing ? 'pb-6 md:pb-10' : ''}`}>
+                        <div className="absolute inset-0 bg-gradient-to-r from-red-400/5 via-red-400/5 to-red-400/5 rounded-3xl blur-xl -z-10"></div>
                         
                         <div className="relative md:absolute md:left-8 md:-top-16 group">
-                            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full blur-lg opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-400 rounded-full blur-lg opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <img
                                 src={editing ? editedPhoto : (user.photo || "/default-profile.jpg")}
                                 alt={`${user.name}'s profile`}
@@ -360,7 +360,7 @@ function ProfilePage() {
                                 <button
                                     type="button"
                                     onClick={() => setPhotoSelectorOpen(true)}
-                                    className="absolute -bottom-2 -right-2 bg-gradient-to-r from-pink-600 to-rose-600 p-3 rounded-full shadow-lg border-2 border-black cursor-pointer hover:scale-110 hover:from-pink-700 hover:to-rose-700 transition-all duration-300 group/camera"
+                                    className="absolute -bottom-2 -right-2 bg-gradient-to-r from-red-400 to-red-400 p-3 rounded-full shadow-lg border-2 border-black cursor-pointer hover:scale-110 hover:from-red-400 hover:to-red-400 transition-all duration-300 group/camera"
                                 >
                                     <svg className="w-5 h-5 text-white group-hover/camera:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -376,7 +376,7 @@ function ProfilePage() {
                             <div className="relative group/location">
                                 {editing ? (
                                     <div className="flex items-center gap-2">
-                                        <svg className="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                                             <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                                         </svg>
                                         <input
@@ -384,12 +384,12 @@ function ProfilePage() {
                                             value={editedLocation}
                                             onChange={(e) => setEditedLocation(e.target.value)}
                                             placeholder="Enter location"
-                                            className="flex-1 px-3 py-2 bg-gray-900/50 border border-pink-500/30 rounded-lg text-white focus:outline-none focus:border-pink-500/60 focus:ring-2 focus:ring-pink-500/20 transition-all duration-300"
+                                            className="flex-1 px-3 py-2 bg-gray-900/50 border border-red-400/30 rounded-lg text-white focus:outline-none focus:border-red-400/60 focus:ring-2 focus:ring-red-400/20 transition-all duration-300"
                                         />
                                     </div>
                                 ) : (
                                     <p className="text-gray-400 flex items-center gap-2">
-                                        <svg className="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                                             <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                                         </svg>
                                         {user.location || "Unknown"}
@@ -414,14 +414,14 @@ function ProfilePage() {
                                                     }
                                                 }}
                                                 placeholder="Add keyword (max 15 chars)"
-                                                className="flex-1 px-3 py-2 bg-gray-900/50 border border-pink-500/30 rounded-lg text-white focus:outline-none focus:border-pink-500/60 focus:ring-2 focus:ring-pink-500/20 transition-all duration-300"
+                                                className="flex-1 px-3 py-2 bg-gray-900/50 border border-red-400/30 rounded-lg text-white focus:outline-none focus:border-red-400/60 focus:ring-2 focus:ring-red-400/20 transition-all duration-300"
                                                 maxLength={15}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={handleAddBioKeyword}
                                                 disabled={editedBio.length >= 6}
-                                                className="px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-semibold shadow-lg transform hover:scale-105 disabled:transform-none transition-all duration-300"
+                                                className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-400 hover:from-red-400 hover:to-red-400 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-semibold shadow-lg transform hover:scale-105 disabled:transform-none transition-all duration-300"
                                             >
                                                 Add
                                             </button>
@@ -436,7 +436,7 @@ function ProfilePage() {
                                                 {editedBio.map((keyword, index) => (
                                                     <span
                                                         key={index}
-                                                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-pink-500/20 to-rose-500/20 border border-pink-500/40 text-pink-300 text-sm font-medium rounded-full backdrop-blur-sm group hover:from-pink-500/30 hover:to-rose-500/30 transition-all duration-300"
+                                                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-red-400/20 to-red-400/20 border border-red-400/40 text-red-400 text-sm font-medium rounded-full backdrop-blur-sm group hover:from-red-400/30 hover:to-red-400/30 transition-all duration-300"
                                                     >
                                                         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fillRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
@@ -445,7 +445,7 @@ function ProfilePage() {
                                                         <button
                                                             type="button"
                                                             onClick={() => handleRemoveBioKeyword(index)}
-                                                            className="ml-1 text-pink-400 hover:text-pink-200 transition-colors duration-200"
+                                                            className="ml-1 text-red-400 hover:text-red-200 transition-colors duration-200"
                                                         >
                                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -462,7 +462,7 @@ function ProfilePage() {
                                             {user.bio.map((keyword, index) => (
                                                 <span
                                                     key={index}
-                                                    className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-pink-500/20 to-rose-500/20 border border-pink-500/40 text-pink-300 text-sm font-medium rounded-full backdrop-blur-sm hover:from-pink-500/30 hover:to-rose-500/30 hover:border-pink-500/60 transition-all duration-300"
+                                                    className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-red-400/20 to-red-400/20 border border-red-400/40 text-red-400 text-sm font-medium rounded-full backdrop-blur-sm hover:from-red-400/30 hover:to-red-400/30 hover:border-red-400/60 transition-all duration-300"
                                                 >
                                                     <svg className="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
@@ -478,23 +478,23 @@ function ProfilePage() {
 
                         <div className="w-11/12 md:w-1/2 flex flex-col items-center mt-12 md:mt-0">
                             <div className="flex justify-around w-full mb-6 gap-4">
-                                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 flex-1">
-                                    <p className="text-3xl font-bold text-pink-500">
+                                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-red-400/20 hover:border-red-400/40 transition-all duration-300 flex-1">
+                                    <p className="text-3xl font-bold text-red-400">
                                         {allPlans.length}
                                     </p>
                                     <p className="text-gray-400 text-sm mt-1">Plans</p>
                                 </div>
                                 <div 
                                     onClick={openModal}
-                                    className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 flex-1 cursor-pointer"
+                                    className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-red-400/20 hover:border-red-400/40 transition-all duration-300 flex-1 cursor-pointer"
                                 >
-                                    <p className="text-3xl font-bold text-pink-500">
+                                    <p className="text-3xl font-bold text-red-400">
                                         {user.followers.length || 0}
                                     </p>
                                     <p className="text-gray-400 text-sm mt-1">Followers</p>
                                 </div>
-                                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-pink-500/20 hover:border-pink-500/40 transition-all duration-300 flex-1">
-                                    <p className="text-3xl font-bold text-pink-500">
+                                <div className="text-center bg-gray-900/50 backdrop-blur-sm rounded-2xl p-4 border border-red-400/20 hover:border-red-400/40 transition-all duration-300 flex-1">
+                                    <p className="text-3xl font-bold text-red-400">
                                         {user.badge || "Level 1"}
                                     </p>
                                     <p className="text-gray-400 text-sm mt-1">Badge</p>
@@ -521,7 +521,7 @@ function ProfilePage() {
                                     <>
                                         <button 
                                             onClick={handleEditProfile} 
-                                            className="w-1/2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white px-4 py-3 rounded-full font-semibold shadow-lg hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300"
+                                            className="w-1/2 bg-gradient-to-r from-red-500 to-red-500 hover:from-red-400 hover:to-red-400 text-white px-4 py-3 rounded-full font-semibold shadow-lg hover:shadow-red-400/50 transform hover:scale-105 transition-all duration-300"
                                         >
                                             Edit Profile
                                         </button>
@@ -539,32 +539,32 @@ function ProfilePage() {
 
                     {isModalOpen && (
                         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
-                            <div className="bg-gradient-to-br from-gray-900 to-black border border-pink-500/30 p-8 rounded-3xl w-11/12 md:w-[500px] shadow-2xl relative">
+                            <div className="bg-gradient-to-br from-gray-900 to-black border border-red-400/30 p-8 rounded-3xl w-11/12 md:w-[500px] shadow-2xl relative">
                                 <h2 className="text-3xl font-bold text-white mb-6">Followers</h2>
                                 
-                                <ul className="max-h-96 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-gray-800">
+                                <ul className="max-h-96 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-red-400 scrollbar-track-gray-800">
                                     {user.followers.length > 0 ? (
                                         user.followers.map((follower, index) => (
                                             <li 
                                                 key={index} 
-                                                className="p-4 bg-gray-900/50 border border-pink-500/20 rounded-2xl flex items-center gap-4 hover:border-pink-500/40 hover:bg-gray-900/70 transition-all duration-300 group"
+                                                className="p-4 bg-gray-900/50 border border-red-400/20 rounded-2xl flex items-center gap-4 hover:border-red-400/40 hover:bg-gray-900/70 transition-all duration-300 group"
                                             >
                                                 <div className="relative">
-                                                    <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full blur-sm opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-400 rounded-full blur-sm opacity-50 group-hover:opacity-75 transition-opacity"></div>
                                                     <img
                                                         src={follower.photo || "/default-profile.jpg"}
                                                         alt={`${follower.name}'s profile`}
-                                                        className="relative w-14 h-14 rounded-full border-2 border-pink-400 shadow-lg"
+                                                        className="relative w-14 h-14 rounded-full border-2 border-red-400 shadow-lg"
                                                     />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <p className="text-lg font-semibold text-white">{follower.name || "Unknown"}</p>
-                                                    <p className="text-sm text-gray-400 flex items-center gap-1">
-                                                        <svg className="w-4 h-4 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                                                        </svg>
-                                                        {follower.location || "Location: Unknown"}
-                                                    </p>
+                                                    <div className="flex-1">
+                                                        <p className="text-lg font-semibold text-white">{follower.name || "Unknown"}</p>
+                                                        <p className="text-sm text-gray-400 flex items-center gap-1">
+                                                            <svg className="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                                                            </svg>
+                                                            {follower.location || "Location: Unknown"}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </li>
                                         ))
@@ -575,7 +575,7 @@ function ProfilePage() {
 
                                 <button
                                     onClick={closeModal}
-                                    className="absolute top-4 right-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white w-10 h-10 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center"
+                                    className="absolute top-4 right-4 bg-gradient-to-r from-red-400 to-red-400 hover:from-red-400 hover:to-red-400 text-white w-10 h-10 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -587,7 +587,7 @@ function ProfilePage() {
 
                     {photoSelectorOpen && (
                         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
-                            <div className="bg-gradient-to-br from-gray-900 to-black border border-pink-500/30 p-8 rounded-3xl w-11/12 md:w-[600px] shadow-2xl relative">
+                            <div className="bg-gradient-to-br from-gray-900 to-black border border-red-400/30 p-8 rounded-3xl w-11/12 md:w-[600px] shadow-2xl relative">
                                 <h2 className="text-3xl font-bold text-white mb-6 text-center">Choose Profile Photo</h2>
                                 
                                 <div className="grid grid-cols-3 gap-4 mb-6">
@@ -597,18 +597,18 @@ function ProfilePage() {
                                             onClick={() => handleSelectPhoto(photoUrl)}
                                             className={`relative group/photo overflow-hidden rounded-2xl border-4 ${
                                                 editedPhoto === photoUrl 
-                                                    ? 'border-pink-500 shadow-lg shadow-pink-500/50' 
-                                                    : 'border-transparent hover:border-pink-400/50'
+                                                    ? 'border-red-400 shadow-lg shadow-red-400/50' 
+                                                    : 'border-transparent hover:border-red-400/50'
                                             } transition-all duration-300 transform hover:scale-105`}
                                         >
-                                            <div className="absolute inset-0 bg-gradient-to-t from-pink-500/30 to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-red-400/30 to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
                                             <img
                                                 src={photoUrl}
                                                 alt={`Profile option ${index + 1}`}
                                                 className="w-full h-32 object-cover"
                                             />
                                             {editedPhoto === photoUrl && (
-                                                <div className="absolute inset-0 flex items-center justify-center bg-pink-500/30">
+                                                <div className="absolute inset-0 flex items-center justify-center bg-red-400/30">
                                                     <svg className="w-12 h-12 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                                     </svg>
@@ -621,7 +621,7 @@ function ProfilePage() {
                                 <div className="flex gap-4">
                                     <button
                                         onClick={() => setPhotoSelectorOpen(false)}
-                                        className="flex-1 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300"
+                                        className="flex-1 bg-gradient-to-r from-red-400 to-red-400 hover:from-red-400 hover:to-red-400 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-red-400/50 transform hover:scale-105 transition-all duration-300"
                                     >
                                         Done
                                     </button>
@@ -629,7 +629,7 @@ function ProfilePage() {
 
                                 <button
                                     onClick={() => setPhotoSelectorOpen(false)}
-                                    className="absolute top-4 right-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white w-10 h-10 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center"
+                                    className="absolute top-4 right-4 bg-gradient-to-r from-red-400 to-red-400 hover:from-red-400 hover:to-red-400 text-white w-10 h-10 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -639,13 +639,13 @@ function ProfilePage() {
                         </div>
                     )}
 
-                    <div className={`w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-pink-500/20 shadow-2xl rounded-3xl p-8 hover:border-pink-500/30 transition-all duration-500 mb-12`} style={{ marginTop: profileCardHeight ? `${profileCardHeight + 28}px` : undefined }}>
+                    <div className={`w-11/12 md:w-9/12 bg-gradient-to-br from-gray-900 to-black border border-red-400/20 shadow-2xl rounded-3xl p-8 hover:border-red-400/30 transition-all duration-500 mb-12`} style={{ marginTop: profileCardHeight ? `${profileCardHeight + 28}px` : undefined }}>
                         <h2 className="text-3xl font-bold text-white mb-6">Plans</h2>
                         
                         <div className="grid grid-cols-1 gap-8">
                             <div>
-                                <h3 className="text-2xl font-semibold text-pink-400 mb-4 flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></span>
+                                <h3 className="text-2xl font-semibold text-red-400 mb-4 flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
                                     Upcoming Plans
                                 </h3>
                                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -654,7 +654,7 @@ function ProfilePage() {
                                             <div 
                                                 key={index} 
                                                 onClick={() => navigate(`/showplans/${plan._id}`)} 
-                                                className="group bg-gray-900/50 border border-pink-500/20 shadow-xl rounded-2xl overflow-hidden cursor-pointer hover:border-pink-500/50 hover:shadow-2xl hover:shadow-pink-500/20 transform hover:scale-105 transition-all duration-300"
+                                                className="group bg-gray-900/50 border border-red-400/20 shadow-xl rounded-2xl overflow-hidden cursor-pointer hover:border-red-400/50 hover:shadow-2xl hover:shadow-red-400/20 transform hover:scale-105 transition-all duration-300"
                                             >
                                                 <div className="relative overflow-hidden">
                                                     <img 
@@ -665,9 +665,9 @@ function ProfilePage() {
                                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                                                 </div>
                                                 <div className="p-5">
-                                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors duration-300">{plan.title}</h3>
+                                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300">{plan.title}</h3>
                                                     <p className="text-gray-400 flex items-center gap-2">
-                                                        <svg className="w-4 h-4 text-pink-500" fill="currentColor" viewBox="0 0 20 20">
+                                                        <svg className="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                                                         </svg>
                                                         {new Date(plan.date).toLocaleDateString()}
@@ -684,10 +684,10 @@ function ProfilePage() {
                                     <div className="flex justify-center mt-6 gap-4">
                                         <button
                                             onClick={handlePreviousUpcomingPage}
-                                            className={`px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
+                                            className={`px-6 py-3 bg-gradient-to-r from-red-400 to-red-400 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
                                                 currentUpcomingPage === 1
                                                     ? "opacity-50 cursor-not-allowed"
-                                                    : "hover:from-pink-700 hover:to-rose-700 hover:scale-105 hover:shadow-pink-500/50"
+                                                    : "hover:from-red-400 hover:to-red-400 hover:scale-105 hover:shadow-red-400/50"
                                             }`}
                                             disabled={currentUpcomingPage === 1}
                                         >
@@ -695,10 +695,10 @@ function ProfilePage() {
                                         </button>
                                         <button
                                             onClick={handleNextUpcomingPage}
-                                            className={`px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
+                                            className={`px-6 py-3 bg-gradient-to-r from-red-400 to-red-400 text-white rounded-full font-semibold shadow-lg transform transition-all duration-300 ${
                                                 currentUpcomingPage === totalPagesUpcoming
                                                     ? "opacity-50 cursor-not-allowed"
-                                                    : "hover:from-pink-700 hover:to-rose-700 hover:scale-105 hover:shadow-pink-500/50"
+                                                    : "hover:from-red-400 hover:to-red-400 hover:scale-105 hover:shadow-red-400/50"
                                             }`}
                                             disabled={currentUpcomingPage === totalPagesUpcoming}
                                         >
@@ -778,7 +778,7 @@ function ProfilePage() {
                             <div className="flex justify-center mt-8">
                                 <button
                                     onClick={handleViewMore}
-                                    className="px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-full font-semibold shadow-lg hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300"
+                                    className="px-8 py-4 bg-gradient-to-r from-red-400 to-red-400 hover:from-red-400 hover:to-red-400 text-white rounded-full font-semibold shadow-lg hover:shadow-red-400/50 transform hover:scale-105 transition-all duration-300"
                                 >
                                     View More
                                 </button>

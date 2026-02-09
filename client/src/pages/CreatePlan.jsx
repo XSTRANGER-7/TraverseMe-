@@ -1,8 +1,9 @@
 
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
+import indiaCities from "../data/indiaCities";
 import {jwtDecode} from "jwt-decode";
 
 const CreatePlan = () => {
@@ -89,6 +90,21 @@ const CreatePlan = () => {
   };
 
   const current = fields[step];
+  const [showCityList, setShowCityList] = useState(false);
+  const [filteredCities, setFilteredCities] = useState(indiaCities);
+
+  const handleLocationChange = (val) => {
+    setLocation(val);
+    const q = String(val || "").toLowerCase();
+    if (!q) setFilteredCities(indiaCities);
+    else setFilteredCities(indiaCities.filter((c) => c.toLowerCase().includes(q)));
+    setShowCityList(true);
+  };
+
+  const handleSelectCity = (city) => {
+    setLocation(city);
+    setShowCityList(false);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
@@ -110,7 +126,38 @@ const CreatePlan = () => {
                 placeholder={`Enter ${current.label.toLowerCase()}`}
                 rows={6}
               />
-            ) : current.type === "file" ? (
+            ) : current.key === 'location' ? (
+                <div className="w-full relative">
+                  <input
+                    value={current.value}
+                    onChange={(e) => handleLocationChange(e.target.value)}
+                    onFocus={() => { setFilteredCities(indiaCities); setShowCityList(true); }}
+                    onBlur={() => setTimeout(() => setShowCityList(false), 150)}
+                    className="w-full bg-black border border-gray-700 rounded-md p-4 text-white placeholder-gray-500"
+                    placeholder="Select or type a city"
+                    aria-label="Select city"
+                  />
+
+                  <div className={`absolute left-0 right-0 mt-1 bg-black border border-gray-700 rounded-md z-50 ${showCityList ? '' : 'hidden'}`}>
+                    <div className="max-h-56 sm:max-h-48 overflow-auto">
+                      {filteredCities.length === 0 ? (
+                        <div className="p-3 text-gray-400">No cities found</div>
+                      ) : (
+                        filteredCities.map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onMouseDown={() => handleSelectCity(c)}
+                            className="w-full text-left px-4 py-2 hover:bg-red-900/30 text-gray-200"
+                          >
+                            {c}
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : current.key === 'photo' ? (
               <>
                 <input
                   ref={fileInputRef}

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
@@ -11,12 +11,28 @@ const CreatePlan = () => {
   const [location, setLocation] = useState("");
   const [timing, setTiming] = useState("");
   const [photo, setPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [date, setDate] = useState("");
   const [step, setStep] = useState(0);
+  const fileInputRef = useRef(null);
 
   const token = localStorage.getItem("token");
   const decodeduser = token ? jwtDecode(token) : null;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    return () => {
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+    };
+  }, [photoPreview]);
+
+  const handleFile = (file) => {
+    if (!file) return;
+    setPhoto(file);
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
 
   const fields = [
     { key: "title", label: "Title", type: "text", value: title, setter: setTitle },
@@ -95,11 +111,39 @@ const CreatePlan = () => {
                 rows={6}
               />
             ) : current.type === "file" ? (
-              <input
-                type="file"
-                onChange={(e) => current.setter(e.target.files[0])}
-                className="w-full text-white bg-black"
-              />
+              <>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFile(e.target.files[0])}
+                  className="hidden"
+                />
+
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => { e.preventDefault(); setIsDragging(false); const f = e.dataTransfer.files[0]; handleFile(f); }}
+                  className={`w-full rounded-md p-8 text-center cursor-pointer bg-black ${isDragging ? 'border-2 border-red-300' : 'border-2 border-dashed border-gray-600'}`}
+                >
+                  {photoPreview ? (
+                    <div className="flex flex-col items-center">
+                      <img src={photoPreview} alt="preview" className="max-h-48 object-cover rounded mb-4" />
+                      <div className="flex gap-3">
+                        <button type="button" onClick={() => fileInputRef.current?.click()} className="px-4 py-2 bg-red-400 text-black rounded">Change</button>
+                        <button type="button" onClick={() => { setPhoto(null); URL.revokeObjectURL(photoPreview); setPhotoPreview(null); if (fileInputRef.current) fileInputRef.current.value = null; }} className="px-4 py-2 border border-gray-700 text-gray-200 rounded">Remove</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-gray-300">
+                      <p className="text-lg font-medium text-red-400">Drag & drop a photo here</p>
+                      <p className="text-sm mt-2">or click to select from folder</p>
+                      <p className="text-xs text-gray-500 mt-2">(PNG, JPG, GIF)</p>
+                    </div>
+                  )}
+                </div>
+              </>
             ) : (
               <input
                 type={current.type}

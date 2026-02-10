@@ -81,7 +81,7 @@ const Leaderboard = () => {
                 className={`relative rounded-2xl p-6 bg-gradient-to-b from-gray-900 to-black border ${isActiveTop ? 'border-red-400 shadow-[0_10px_30px_rgba(255,69,58,0.14)]' : 'border-gray-800'} shadow-xl flex flex-col items-center gap-4 transform transition hover:-translate-y-1`}
               >
               <div className="flex items-center gap-4">
-                <div className={`flex items-center justify-center w-20 h-20 rounded-full ring-4 ${idx === 0 ? "ring-red-400" : idx === 1 ? "ring-red-300" : "ring-yellow-400"} overflow-hidden`}> 
+                <div className={`flex items-center justify-center w-20 h-20 rounded-full ring-4 ${idx === 0 ? "ring-red-400" : idx === 1 ? "ring-red-400" : "ring-red-400"} overflow-hidden`}> 
                   <img src={user.photo} alt={user.name} className="w-full h-full object-cover" />
                 </div>
               </div>
@@ -110,7 +110,7 @@ const Leaderboard = () => {
               >
                 <div className="flex items-center gap-4">
                   <div className="text-xl font-bold text-gray-300 w-8 text-center">{displayIndex}</div>
-                  <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-800">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border border-red-300">
                     <img src={user.photo} alt={user.name} className="w-full h-full object-cover" />
                   </div>
                   <div>

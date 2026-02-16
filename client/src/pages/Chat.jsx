@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { openDB } from "idb";
@@ -45,7 +43,11 @@ const Chat = ({ loggedInUser }) => {
         (msg.senderId === loggedInUser && msg.recipientId === otherUserId) ||
         (msg.senderId === otherUserId && msg.recipientId === loggedInUser)
     );
-    setMessages(filteredMessages);
+    // sort by timestamp ascending so UI shows oldest -> newest
+    const sorted = filteredMessages.sort(
+      (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+    );
+    setMessages(sorted);
   };
 
   // Scroll to the bottom of the chat container
@@ -53,6 +55,32 @@ const Chat = ({ loggedInUser }) => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
+  };
+
+  // Helpers for date grouping and labels
+  const isSameDay = (d1, d2) => {
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
+  };
+
+  const isYesterday = (d) => {
+    const y = new Date();
+    y.setDate(y.getDate() - 1);
+    return isSameDay(d, y);
+  };
+
+  const formatDateHeader = (isoString) => {
+    const d = new Date(isoString);
+    if (isSameDay(d, new Date())) return "Today";
+    if (isYesterday(d)) return "Yesterday";
+    return d.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
   };
 
   // Load messages and handle chat initialization
@@ -99,7 +127,10 @@ const Chat = ({ loggedInUser }) => {
     };
 
     await saveMessageToDB(newChatMessage); // Save to IndexedDB
-    setMessages((prev) => [...prev, newChatMessage]); // Update UI
+    setMessages((prev) => {
+      const merged = [...prev, newChatMessage];
+      return merged.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    }); // Update UI (keeps chronological order)
     setNewMessage(""); // Clear input
   };
 
@@ -160,52 +191,61 @@ const Chat = ({ loggedInUser }) => {
         ) : (
           messages.map((msg, index) => {
             const isCurrentUser = msg.senderId === loggedInUser;
-            const showAvatar = index === 0 || messages[index - 1].senderId !== msg.senderId;
-            
+            const prevMsg = messages[index - 1];
+            const showAvatar = index === 0 || prevMsg?.senderId !== msg.senderId;
+            const showDateHeader = index === 0 || !isSameDay(new Date(msg.timestamp), new Date(prevMsg.timestamp));
+
             return (
-              <div
-                key={index}
-                className={`flex ${isCurrentUser ? "justify-end" : "justify-start"} items-end space-x-2`}
-              >
-                {!isCurrentUser && showAvatar && (
-                  <img
-                    src={ouser?.photo || "https://via.placeholder.com/32"}
-                    alt={ouser?.name}
-                    className="w-8 h-8 rounded-full border border-gray-700 object-cover"
-                  />
-                )}
-                {!isCurrentUser && !showAvatar && <div className="w-8"></div>}
-                
-                <div
-                  className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl shadow-lg ${
-                    isCurrentUser
-                      ? "bg-red-400 text-white rounded-br-sm"
-                      : "bg-gray-900 text-gray-100 border border-gray-800 rounded-bl-sm"
-                  }`}
-                  style={{ wordBreak: "break-word" }}
-                >
-                  <p className="text-sm leading-relaxed">{msg.text}</p>
-                  <div className={`flex items-center justify-end mt-2 space-x-1 ${isCurrentUser ? "text-gray-200" : "text-gray-500"}`}>
-                    <span className="text-xs">
-                      {new Date(msg.timestamp).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
-                    {isCurrentUser && (
-                      <BiCheckDouble size={14} className="text-gray-300" />
-                    )}
+              <div key={msg.id || index}>
+                {showDateHeader && (
+                  <div className="flex justify-center mb-4">
+                    <div className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-xs">
+                      {formatDateHeader(msg.timestamp)}
+                    </div>
                   </div>
-                </div>
-                
-                {isCurrentUser && showAvatar && (
-                  <img
-                    src={loggedInUser?.photo || "https://via.placeholder.com/32"}
-                    alt="You"
-                    className="w-8 h-8 rounded-full border border-red-400 object-cover"
-                  />
                 )}
-                {isCurrentUser && !showAvatar && <div className="w-8"></div>}
+
+                <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"} items-end space-x-2`}>
+                  {!isCurrentUser && showAvatar && (
+                    <img
+                      src={ouser?.photo || "https://via.placeholder.com/32"}
+                      alt={ouser?.name}
+                      className="w-8 h-8 rounded-full border border-gray-700 object-cover"
+                    />
+                  )}
+                  {!isCurrentUser && !showAvatar && <div className="w-8"></div>}
+
+                  <div
+                    className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl shadow-lg ${
+                      isCurrentUser
+                        ? "bg-red-400 text-white rounded-br-sm"
+                        : "bg-gray-900 text-gray-100 border border-gray-800 rounded-bl-sm"
+                    }`}
+                    style={{ wordBreak: "break-word" }}
+                  >
+                    <p className="text-sm leading-relaxed">{msg.text}</p>
+                    <div className={`flex items-center justify-end mt-2 space-x-1 ${isCurrentUser ? "text-gray-200" : "text-gray-500"}`}>
+                      <span className="text-xs">
+                        {new Date(msg.timestamp).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                      {isCurrentUser && (
+                        <BiCheckDouble size={14} className="text-gray-300" />
+                      )}
+                    </div>
+                  </div>
+
+                  {isCurrentUser && showAvatar && (
+                    <img
+                      src={loggedInUser?.photo || "https://via.placeholder.com/32"}
+                      alt="You"
+                      className="w-8 h-8 rounded-full border border-red-400 object-cover"
+                    />
+                  )}
+                  {isCurrentUser && !showAvatar && <div className="w-8"></div>}
+                </div>
               </div>
             );
           })

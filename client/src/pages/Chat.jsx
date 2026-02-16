@@ -14,6 +14,7 @@ const Chat = ({ loggedInUser }) => {
 
   const [ouser, setoUser] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [conversations, setConversations] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const chatContainerRef = useRef(null); // Ref for chat container to handle scrolling
 
@@ -34,20 +35,55 @@ const Chat = ({ loggedInUser }) => {
     await db.put("chats", message);
   };
 
-  // Load messages from IndexedDB
+  // Load messages from IndexedDB and build conversations list
   const loadMessagesFromDB = async () => {
     const db = await initializeDB();
     const allMessages = await db.getAll("chats");
-    const filteredMessages = allMessages.filter(
-      (msg) =>
-        (msg.senderId === loggedInUser && msg.recipientId === otherUserId) ||
-        (msg.senderId === otherUserId && msg.recipientId === loggedInUser)
+
+    // Build conversations map for sidebar (all chats involving loggedInUser)
+    const userMessages = allMessages.filter(
+      (m) => m.senderId === loggedInUser || m.recipientId === loggedInUser
     );
-    // sort by timestamp ascending so UI shows oldest -> newest
-    const sorted = filteredMessages.sort(
-      (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+
+    const convMap = {};
+    userMessages.forEach((m) => {
+      const otherId = m.senderId === loggedInUser ? m.recipientId : m.senderId;
+      const ts = new Date(m.timestamp).getTime();
+      if (!convMap[otherId] || convMap[otherId].timestamp < ts) {
+        convMap[otherId] = { lastMessage: m.text, timestamp: ts };
+      }
+    });
+
+    const convArray = Object.keys(convMap)
+      .map((id) => ({ userId: id, lastMessage: convMap[id].lastMessage, timestamp: convMap[id].timestamp }))
+      .sort((a, b) => b.timestamp - a.timestamp);
+
+    // fetch profiles for conversation users
+    const convsWithProfile = await Promise.all(
+      convArray.map(async (c) => {
+        try {
+          const res = await axios.get(`http://localhost:7000/profile/${c.userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          return { ...c, user: res.data.user };
+        } catch (err) {
+          return { ...c, user: { name: "Unknown", photo: null } };
+        }
+      })
     );
-    setMessages(sorted);
+
+    setConversations(convsWithProfile);
+
+    // If an otherUserId is selected, load messages for that conversation
+    if (otherUserId) {
+      const filteredMessages = allMessages.filter(
+        (msg) =>
+          (msg.senderId === loggedInUser && msg.recipientId === otherUserId) ||
+          (msg.senderId === otherUserId && msg.recipientId === loggedInUser)
+      );
+      const sorted = filteredMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+      setMessages(sorted);
+    }
   };
 
   // Scroll to the bottom of the chat container
@@ -142,144 +178,181 @@ const Chat = ({ loggedInUser }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-black text-white">
-      {/* Header */}
-      <div className="bg-black border-b border-gray-800 p-4 flex items-center shadow-lg backdrop-blur-sm">
-        <button 
-          onClick={() => navigate(-1)}
-          className="p-2 rounded-full hover:bg-gray-900 transition-colors mr-3"
-        >
-          <FiArrowLeft size={20} className="text-red-400" />
-        </button>
-        <div className="relative">
-          <img 
-            src={ouser?.photo || "https://via.placeholder.com/40"} 
-            alt={ouser?.name} 
-            className="w-12 h-12 rounded-full border-2 border-red-400 shadow-lg object-cover" 
-          />
-          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-black"></div>
+    <div className="flex h-screen bg-black text-white">
+      {/* Sidebar: Conversations list */}
+      <aside className="w-80 border-r border-gray-800 bg-black flex flex-col">
+        <div className="p-4 border-b border-gray-800">
+          <h3 className="text-sm text-gray-400 font-semibold">Chats</h3>
         </div>
-        <div className="ml-4 flex-grow">
-          <h2 className="text-lg font-semibold text-white">
-            {ouser?.name}
-          </h2>
-          <p className="text-xs text-gray-400">Active now</p>
-        </div>
-        <button className="p-2 rounded-full hover:bg-gray-900 transition-colors">
-          <FiMoreVertical size={20} className="text-gray-400" />
-        </button>
-      </div>
-
-      {/* Chat Messages */}
-      <div
-        ref={chatContainerRef}
-        className="flex-grow overflow-y-auto px-4 py-6 space-y-4"
-        style={{
-          maxHeight: "calc(100vh - 140px)",
-          scrollbarWidth: "thin",
-          scrollbarColor: "#dc2626 #1f1f1f",
-        }}
-      >
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-            <div className="w-20 h-20 rounded-full bg-gray-900 flex items-center justify-center mb-4">
-              <FiSend size={32} className="text-red-400" />
-            </div>
-            <p className="text-lg font-medium">Start a conversation</p>
-            <p className="text-sm text-gray-600">Send a message to begin chatting</p>
-          </div>
-        ) : (
-          messages.map((msg, index) => {
-            const isCurrentUser = msg.senderId === loggedInUser;
-            const prevMsg = messages[index - 1];
-            const showAvatar = index === 0 || prevMsg?.senderId !== msg.senderId;
-            const showDateHeader = index === 0 || !isSameDay(new Date(msg.timestamp), new Date(prevMsg.timestamp));
-
-            return (
-              <div key={msg.id || index}>
-                {showDateHeader && (
-                  <div className="flex justify-center mb-4">
-                    <div className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-xs">
-                      {formatDateHeader(msg.timestamp)}
-                    </div>
+        <div className="flex-grow overflow-y-auto">
+          {conversations.length === 0 ? (
+            <div className="p-4 text-sm text-gray-500">No conversations yet</div>
+          ) : (
+            conversations.map((c) => (
+              <button
+                key={c.userId}
+                onClick={() => navigate(location.pathname, { state: { otherUserId: c.userId } })}
+                className={`w-full text-left flex items-center px-4 py-3 hover:bg-gray-900 transition-colors ${
+                  c.userId === otherUserId ? "bg-gray-900" : ""
+                }`}
+              >
+                <img
+                  src={c.user?.photo || "https://via.placeholder.com/40"}
+                  alt={c.user?.name}
+                  className="w-10 h-10 rounded-full mr-3 object-cover border border-gray-700"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-medium text-white">{c.user?.name || c.userId}</div>
+                    <div className="text-xs text-gray-400">{isSameDay(new Date(c.timestamp), new Date()) ? new Date(c.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : formatDateHeader(new Date(c.timestamp).toISOString())}</div>
                   </div>
-                )}
-
-                <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"} items-end space-x-2`}>
-                  {!isCurrentUser && showAvatar && (
-                    <img
-                      src={ouser?.photo || "https://via.placeholder.com/32"}
-                      alt={ouser?.name}
-                      className="w-8 h-8 rounded-full border border-gray-700 object-cover"
-                    />
-                  )}
-                  {!isCurrentUser && !showAvatar && <div className="w-8"></div>}
-
-                  <div
-                    className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl shadow-lg ${
-                      isCurrentUser
-                        ? "bg-red-400 text-white rounded-br-sm"
-                        : "bg-gray-900 text-gray-100 border border-gray-800 rounded-bl-sm"
-                    }`}
-                    style={{ wordBreak: "break-word" }}
-                  >
-                    <p className="text-sm leading-relaxed">{msg.text}</p>
-                    <div className={`flex items-center justify-end mt-2 space-x-1 ${isCurrentUser ? "text-gray-200" : "text-gray-500"}`}>
-                      <span className="text-xs">
-                        {new Date(msg.timestamp).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
-                      {isCurrentUser && (
-                        <BiCheckDouble size={14} className="text-gray-300" />
-                      )}
-                    </div>
-                  </div>
-
-                  {isCurrentUser && showAvatar && (
-                    <img
-                      src={loggedInUser?.photo || "https://via.placeholder.com/32"}
-                      alt="You"
-                      className="w-8 h-8 rounded-full border border-red-400 object-cover"
-                    />
-                  )}
-                  {isCurrentUser && !showAvatar && <div className="w-8"></div>}
+                  <div className="text-xs text-gray-400 truncate">{c.lastMessage}</div>
                 </div>
-              </div>
-            );
-          })
-        )}
-      </div>
+              </button>
+            ))
+          )}
+        </div>
+      </aside>
 
-      {/* Message Input */}
-      <div className="bg-black border-t border-gray-800 p-4">
-        <div className="flex items-center space-x-3">
-          <div className="flex-grow relative">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder="Type a message..."
-              className="w-full bg-gray-900 text-white px-6 py-4 rounded-full border border-gray-700 focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-400/20 transition-all placeholder-gray-500"
-            />
-          </div>
-          <button
-            onClick={sendMessage}
-            disabled={!newMessage.trim()}
-            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-lg ${
-              newMessage.trim()
-                ? "bg-red-400 hover:bg-red-500 text-white transform hover:scale-105 shadow-red-400/25"
-                : "bg-gray-800 text-gray-500 cursor-not-allowed"
-            }`}
+      {/* Main chat area */}
+      <main className="flex flex-col flex-grow">
+        {/* Header */}
+        <div className="bg-black border-b border-gray-800 p-4 flex items-center shadow-lg backdrop-blur-sm">
+          <button 
+            onClick={() => navigate(-1)}
+            className="p-2 rounded-full hover:bg-gray-900 transition-colors mr-3"
           >
-            <FiSend size={18} />
+            <FiArrowLeft size={20} className="text-red-400" />
+          </button>
+          <div className="relative">
+            <img 
+              src={ouser?.photo || "https://via.placeholder.com/40"} 
+              alt={ouser?.name} 
+              className="w-12 h-12 rounded-full border-2 border-red-400 shadow-lg object-cover" 
+            />
+            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-black"></div>
+          </div>
+          <div className="ml-4 flex-grow">
+            <h2 className="text-lg font-semibold text-white">{ouser?.name}</h2>
+            <p className="text-xs text-gray-400">Active now</p>
+          </div>
+          <button className="p-2 rounded-full hover:bg-gray-900 transition-colors">
+            <FiMoreVertical size={20} className="text-gray-400" />
           </button>
         </div>
-      </div>
+
+        {/* Chat Messages */}
+        <div
+          ref={chatContainerRef}
+          className="flex-grow overflow-y-auto px-4 py-6 space-y-4"
+          style={{
+            maxHeight: "calc(100vh - 140px)",
+            scrollbarWidth: "thin",
+            scrollbarColor: "#dc2626 #1f1f1f",
+          }}
+        >
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+              <div className="w-20 h-20 rounded-full bg-gray-900 flex items-center justify-center mb-4">
+                <FiSend size={32} className="text-red-400" />
+              </div>
+              <p className="text-lg font-medium">Start a conversation</p>
+              <p className="text-sm text-gray-600">Send a message to begin chatting</p>
+            </div>
+          ) : (
+            messages.map((msg, index) => {
+              const isCurrentUser = msg.senderId === loggedInUser;
+              const prevMsg = messages[index - 1];
+              const showAvatar = index === 0 || prevMsg?.senderId !== msg.senderId;
+              const showDateHeader = index === 0 || !isSameDay(new Date(msg.timestamp), new Date(prevMsg.timestamp));
+
+              return (
+                <div key={msg.id || index}>
+                  {showDateHeader && (
+                    <div className="flex justify-center mb-4">
+                      <div className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-xs">
+                        {formatDateHeader(msg.timestamp)}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"} items-end space-x-2`}>
+                    {!isCurrentUser && showAvatar && (
+                      <img
+                        src={ouser?.photo || "https://via.placeholder.com/32"}
+                        alt={ouser?.name}
+                        className="w-8 h-8 rounded-full border border-gray-700 object-cover"
+                      />
+                    )}
+                    {!isCurrentUser && !showAvatar && <div className="w-8"></div>}
+
+                    <div
+                      className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl shadow-lg ${
+                        isCurrentUser
+                          ? "bg-red-400 text-white rounded-br-sm"
+                          : "bg-gray-900 text-gray-100 border border-gray-800 rounded-bl-sm"
+                      }`}
+                      style={{ wordBreak: "break-word" }}
+                    >
+                      <p className="text-sm leading-relaxed">{msg.text}</p>
+                      <div className={`flex items-center justify-end mt-2 space-x-1 ${isCurrentUser ? "text-gray-200" : "text-gray-500"}`}>
+                        <span className="text-xs">
+                          {new Date(msg.timestamp).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </span>
+                        {isCurrentUser && (
+                          <BiCheckDouble size={14} className="text-gray-300" />
+                        )}
+                      </div>
+                    </div>
+
+                    {isCurrentUser && showAvatar && (
+                      <img
+                        src={loggedInUser?.photo || "https://via.placeholder.com/32"}
+                        alt="You"
+                        className="w-8 h-8 rounded-full border border-red-400 object-cover"
+                      />
+                    )}
+                    {isCurrentUser && !showAvatar && <div className="w-8"></div>}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Message Input */}
+        <div className="bg-black border-t border-gray-800 p-4">
+          <div className="flex items-center space-x-3">
+            <div className="flex-grow relative">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="Type a message..."
+                className="w-full bg-gray-900 text-white px-6 py-4 rounded-full border border-gray-700 focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-400/20 transition-all placeholder-gray-500"
+              />
+            </div>
+            <button
+              onClick={sendMessage}
+              disabled={!newMessage.trim()}
+              className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-lg ${
+                newMessage.trim()
+                  ? "bg-red-400 hover:bg-red-500 text-white transform hover:scale-105 shadow-red-400/25"
+                  : "bg-gray-800 text-gray-500 cursor-not-allowed"
+              }`}
+            >
+              <FiSend size={18} />
+            </button>
+          </div>
+        </div>
+      </main>
     </div>
   );
+
 };
 
 export default Chat;

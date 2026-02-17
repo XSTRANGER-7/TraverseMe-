@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { openDB } from "idb";
 import { FiSend, FiArrowLeft, FiMoreVertical } from "react-icons/fi";
-import { BiCheck, BiCheckDouble } from "react-icons/bi";
+import { BiCheckDouble } from "react-icons/bi";
 import axios from "axios";
 
 const Chat = ({ loggedInUser }) => {
@@ -180,33 +180,71 @@ const Chat = ({ loggedInUser }) => {
   return (
     <div className="flex h-screen bg-black text-white">
       {/* Sidebar: Conversations list */}
-      <aside className="w-80 border-r border-gray-800 bg-black flex flex-col">
-        <div className="p-4 border-b border-gray-800">
-          <h3 className="text-sm text-gray-400 font-semibold">Chats</h3>
+      <aside className="w-96 border-r border-gray-800 bg-gradient-to-b from-black to-gray-900 flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-10">
+          <h3 className="text-xl font-bold text-white">Messages</h3>
+          <p className="text-xs text-gray-500 mt-1">Your conversations</p>
         </div>
-        <div className="flex-grow overflow-y-auto">
+
+        {/* Conversations List */}
+        <div className="flex-grow overflow-y-auto"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none"
+          }}
+        >
+          <style>{`
+            div::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
           {conversations.length === 0 ? (
-            <div className="p-4 text-sm text-gray-500">No conversations yet</div>
+            <div className="flex flex-col items-center justify-center h-48 px-4">
+              <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4">
+                <FiSend size={24} className="text-red-400/50" />
+              </div>
+              <p className="text-sm text-gray-400 text-center">No conversations yet</p>
+              <p className="text-xs text-gray-600 text-center mt-2">Start chatting with users to see messages here</p>
+            </div>
           ) : (
             conversations.map((c) => (
               <button
                 key={c.userId}
                 onClick={() => navigate(location.pathname, { state: { otherUserId: c.userId } })}
-                className={`w-full text-left flex items-center px-4 py-3 hover:bg-gray-900 transition-colors ${
-                  c.userId === otherUserId ? "bg-gray-900" : ""
+                className={`w-full text-left flex items-center gap-2 px-3 py-3.5 mx-1 my-1 rounded-lg transition-all duration-200 ${
+                  c.userId === otherUserId
+                    ? "bg-gradient-to-r from-red-400/20 to-red-400/10 border border-red-400/30 shadow-lg shadow-red-400/10"
+                    : "hover:bg-gray-800/40 border border-transparent"
                 }`}
               >
-                <img
-                  src={c.user?.photo || "https://via.placeholder.com/40"}
-                  alt={c.user?.name}
-                  className="w-10 h-10 rounded-full mr-3 object-cover border border-gray-700"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm font-medium text-white">{c.user?.name || c.userId}</div>
-                    <div className="text-xs text-gray-400">{isSameDay(new Date(c.timestamp), new Date()) ? new Date(c.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : formatDateHeader(new Date(c.timestamp).toISOString())}</div>
+                {/* Avatar */}
+                <div className="flex-shrink-0 relative">
+                  <img
+                    src={c.user?.photo || "https://via.placeholder.com/48"}
+                    alt={c.user?.name}
+                    className={`w-12 h-12 rounded-full object-cover transition-all ${
+                      c.userId === otherUserId ? "border-2 border-red-400 ring-2 ring-red-400/30" : "border border-gray-700"
+                    }`}
+                  />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-black shadow-sm"></div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-1.5 mb-1">
+                    <h4 className="text-sm font-semibold text-white truncate">
+                      {c.user?.name || c.userId}
+                    </h4>
+                    <span className="text-xs text-gray-500 flex-shrink-0 whitespace-nowrap">
+                      {isSameDay(new Date(c.timestamp), new Date())
+                        ? new Date(c.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                        : formatDateHeader(new Date(c.timestamp).toISOString())}
+                    </span>
                   </div>
-                  <div className="text-xs text-gray-400 truncate">{c.lastMessage}</div>
+                  <p className="text-xs text-gray-400 truncate">
+                    {c.lastMessage || "No messages yet"}
+                  </p>
                 </div>
               </button>
             ))

@@ -315,15 +315,6 @@ const Chat = ({ loggedInUser }) => {
                   )}
 
                   <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"} items-end space-x-2`}>
-                    {!isCurrentUser && showAvatar && (
-                      <img
-                        src={ouser?.photo || "https://via.placeholder.com/32"}
-                        alt={ouser?.name}
-                        className="w-8 h-8 rounded-full border border-gray-700 object-cover"
-                      />
-                    )}
-                    {!isCurrentUser && !showAvatar && <div className="w-8"></div>}
-
                     <div
                       className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl shadow-lg ${
                         isCurrentUser
@@ -345,15 +336,6 @@ const Chat = ({ loggedInUser }) => {
                         )}
                       </div>
                     </div>
-
-                    {isCurrentUser && showAvatar && (
-                      <img
-                        src={loggedInUser?.photo || "https://via.placeholder.com/32"}
-                        alt="You"
-                        className="w-8 h-8 rounded-full border border-red-400 object-cover"
-                      />
-                    )}
-                    {isCurrentUser && !showAvatar && <div className="w-8"></div>}
                   </div>
                 </div>
               );

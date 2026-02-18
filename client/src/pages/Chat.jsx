@@ -16,6 +16,7 @@ const Chat = ({ loggedInUser }) => {
   const [messages, setMessages] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [showSidebar, setShowSidebar] = useState(false);
   const chatContainerRef = useRef(null); // Ref for chat container to handle scrolling
 
   // Initialize IndexedDB
@@ -178,14 +179,17 @@ const Chat = ({ loggedInUser }) => {
   };
 
   return (
-    <div className="flex h-screen bg-black text-white">
+    <div className="flex flex-col md:flex-row min-h-screen bg-black text-white">
       {/* Sidebar: Conversations list */}
-      <aside className="w-96 border-r border-gray-800 bg-gradient-to-b from-black to-gray-900 flex flex-col">
+      <aside className={`fixed md:static inset-0 w-full md:w-96 border-b md:border-b-0 md:border-r border-gray-800 bg-gradient-to-b from-black to-gray-900 flex flex-col md:h-screen z-40 transition-all duration-300 ${showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
         {/* Header */}
         <div className="p-6 border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate("/userlist")}
+              onClick={() => {
+                navigate("/userlist");
+                setShowSidebar(false);
+              }}
               className="p-2 rounded-full hover:bg-gray-900 transition-colors"
               aria-label="Go back"
               type="button"
@@ -200,7 +204,7 @@ const Chat = ({ loggedInUser }) => {
         </div>
 
         {/* Conversations List */}
-        <div className="flex-grow overflow-y-auto"
+        <div className="flex-grow min-h-0 overflow-y-auto"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none"
@@ -223,7 +227,10 @@ const Chat = ({ loggedInUser }) => {
             conversations.map((c) => (
               <button
                 key={c.userId}
-                onClick={() => navigate(location.pathname, { state: { otherUserId: c.userId } })}
+                onClick={() => {
+                  navigate(location.pathname, { state: { otherUserId: c.userId } });
+                  setShowSidebar(false);
+                }}
                 className={`w-full text-left flex items-center gap-2 px-3 py-3.5 mx-1 my-1 rounded-lg transition-all duration-200 ${
                   c.userId === otherUserId
                     ? "bg-gradient-to-r from-red-400/20 to-red-400/10 border border-red-400/30 shadow-lg shadow-red-400/10"
@@ -264,10 +271,28 @@ const Chat = ({ loggedInUser }) => {
         </div>
       </aside>
 
+      {/* Overlay for mobile */}
+      {showSidebar && (
+        <div
+          className="fixed inset-0 bg-black/50 md:hidden z-30"
+          onClick={() => setShowSidebar(false)}
+        ></div>
+      )}
+
       {/* Main chat area */}
-      <main className="flex flex-col flex-grow">
+      <main className="flex flex-col flex-grow min-h-0 w-full">
         {/* Header */}
-        <div className="bg-black border-b border-gray-800 p-4 flex items-center shadow-lg backdrop-blur-sm">
+        <div className="bg-black border-b border-gray-800 p-4 flex items-center shadow-lg backdrop-blur-sm gap-3">
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="md:hidden p-2 rounded-full hover:bg-gray-900 transition-colors"
+            aria-label="Toggle conversations"
+            type="button"
+          >
+            <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
           <div className="relative">
             <img 
               src={ouser?.photo || "https://via.placeholder.com/40"} 
@@ -288,9 +313,8 @@ const Chat = ({ loggedInUser }) => {
         {/* Chat Messages */}
         <div
           ref={chatContainerRef}
-          className="flex-grow overflow-y-auto px-4 py-6 space-y-4"
+          className="flex-grow min-h-0 overflow-y-auto px-4 py-6 space-y-4"
           style={{
-            maxHeight: "calc(100vh - 140px)",
             scrollbarWidth: "thin",
             scrollbarColor: "#dc2626 #1f1f1f",
           }}

@@ -183,8 +183,20 @@ const Chat = ({ loggedInUser }) => {
       <aside className="w-96 border-r border-gray-800 bg-gradient-to-b from-black to-gray-900 flex flex-col">
         {/* Header */}
         <div className="p-6 border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-10">
-          <h3 className="text-xl font-bold text-white">Messages</h3>
-          <p className="text-xs text-gray-500 mt-1">Your conversations</p>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/userlist")}
+              className="p-2 rounded-full hover:bg-gray-900 transition-colors"
+              aria-label="Go back"
+              type="button"
+            >
+              <FiArrowLeft size={20} className="text-red-400" />
+            </button>
+            <div>
+              <h3 className="text-xl font-bold text-white">Messages</h3>
+              <p className="text-xs text-gray-500 mt-1">Your conversations</p>
+            </div>
+          </div>
         </div>
 
         {/* Conversations List */}
@@ -256,12 +268,6 @@ const Chat = ({ loggedInUser }) => {
       <main className="flex flex-col flex-grow">
         {/* Header */}
         <div className="bg-black border-b border-gray-800 p-4 flex items-center shadow-lg backdrop-blur-sm">
-          <button 
-            onClick={() => navigate(-1)}
-            className="p-2 rounded-full hover:bg-gray-900 transition-colors mr-3"
-          >
-            <FiArrowLeft size={20} className="text-red-400" />
-          </button>
           <div className="relative">
             <img 
               src={ouser?.photo || "https://via.placeholder.com/40"} 
